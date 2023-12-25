@@ -24,7 +24,7 @@ const Button = ({mode, style, ...props}) => {
     // Merging passed-in styles
     buttonStyle = {...buttonStyle, ...style};
 
-    return <PaperButton mode={mode} style={buttonStyle} {...props} />;
+    return <PaperButton mode={mode} style={buttonStyle} {...props}  children={props.children}/>;
 };
 
 const styles = {

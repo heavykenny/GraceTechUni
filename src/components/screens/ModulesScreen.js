@@ -2,6 +2,7 @@ import React from 'react';
 import {FlatList, SafeAreaView, View} from 'react-native';
 import {Card, Paragraph, Title} from 'react-native-paper';
 import Styles from "../../constants/styles";
+import CustomHeader from "../common/CustomHeader";
 
 const CourseScreen = ({navigation}) => {
     const courses = [
@@ -33,6 +34,9 @@ const CourseScreen = ({navigation}) => {
 
     return (
         <SafeAreaView style={Styles.screenContainer}>
+            <CustomHeader
+                title="Modules"
+            />
             <View style={Styles.scrollView}>
                 <FlatList
                     data={courses}
