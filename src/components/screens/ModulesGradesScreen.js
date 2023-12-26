@@ -2,6 +2,7 @@ import React from 'react';
 import {FlatList, SafeAreaView, StyleSheet, View} from 'react-native';
 import {Appbar, List} from 'react-native-paper';
 import Styles from "../../constants/styles";
+import CustomHeader from "../common/CustomHeader";
 
 const ModulesGradesScreen = ({navigation}) => {
     const modules = [
@@ -28,11 +29,12 @@ const ModulesGradesScreen = ({navigation}) => {
 
     return (
         <SafeAreaView style={Styles.screenContainer}>
+            <CustomHeader
+                title="Modules & Grades"
+                showBackButton={true}
+                onBackPress={() => navigation.goBack()}
+            />
             <View style={Styles.scrollView}>
-                <Appbar.Header style={Styles.appbar} statusBarHeight={0} mode={'small'}>
-                    <Appbar.BackAction style={Styles.backAction} onPress={() => navigation.goBack()}/>
-                    <Appbar.Content titleStyle={Styles.appbarContent} title="Back"/>
-                </Appbar.Header>
                 <FlatList
                     data={modules}
                     renderItem={renderItem}

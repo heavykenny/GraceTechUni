@@ -4,17 +4,8 @@ import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import AuthNavigator from './src/components/navigation/AuthNavigator';
 import MainNavigator from './src/components/navigation/MainNavigator';
 import {AuthProvider, useAuth} from './src/context/AuthContext';
-import {dataRetrieve} from './src/constants/functions';
 import {UserProvider} from "./src/context/UserContext";
-
-const getUser = async () => {
-    try {
-        return await dataRetrieve('userObject');
-    } catch (error) {
-        console.error('Error retrieving user data:', error);
-        return null;
-    }
-};
+import AppNavigator from "./src/components/navigation/AppNavigator";
 
 const AppContainer = () => {
     const {isAuthenticated} = useAuth();
@@ -25,7 +16,7 @@ const AppContainer = () => {
     return (
         <PaperProvider theme={theme}>
             <NavigationContainer>
-                {isAuthenticated ? <MainNavigator/> : <AuthNavigator/>}
+                {isAuthenticated ? <AppNavigator/> : <AuthNavigator/>}
             </NavigationContainer>
         </PaperProvider>
     );

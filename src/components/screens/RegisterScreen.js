@@ -2,11 +2,16 @@ import React, {useEffect, useState} from 'react';
 import {Text, View} from 'react-native';
 import InputField from "../common/InputField";
 import Styles from "../../constants/styles";
-import Button from "../common/Button";
-import {generateStudentId, registerWithEmail} from "../../services/firebase/auth";
-import {dataRetrieve, dataStorage} from "../../constants/functions";
+import CustomButton from "../common/CustomButton";
+import {registerWithEmail} from "../../services/firebase/auth";
+import {dataRetrieve} from "../../constants/functions";
+import MessageSnackBar from "../common/MessageSnackBar";
 
 const RegisterScreen = ({navigation}) => {
+    const [isMessageVisible, setIsMessageVisible] = useState(false);
+    const [message, setMessage] = useState('');
+    const [messageType, setMessageType] = useState('');
+
     useEffect(() => {
         const checkAuth = async () => {
             const authenticatedUser = dataRetrieve('userObject').then(r => {
@@ -26,8 +31,28 @@ const RegisterScreen = ({navigation}) => {
     const [confirmPassword, setConfirmPassword] = useState('');
 
     const handleRegister = () => {
+        // check valid email address
+        if (!email || !password) {
+            setMessage('Please enter both email and password');
+            setMessageType('error');
+            setIsMessageVisible(true);
+            return;
+        }
+
+        // check if email is empty
         if (password !== confirmPassword) {
-            console.log('Passwords do not match');
+            setMessage('Passwords do not match');
+            setMessageType('error');
+            setIsMessageVisible(true);
+            return;
+        }
+
+        // check password length
+        if (password.length < 6) {
+            setMessage('Password must be at least 6 characters');
+            setMessageType('error');
+            setIsMessageVisible(true);
+            console.log('Password must be at least 6 characters');
             return;
         }
 
@@ -38,9 +63,19 @@ const RegisterScreen = ({navigation}) => {
 
         registerWithEmail(userData).then(
             (user) => {
-                navigation.navigate('Login');
+                setMessage('User registered successfully');
+                setMessageType('success');
+                setIsMessageVisible(true);
+                console.log('User registered successfully');
+
+                setTimeout(() => {
+                    navigation.navigate('Login');
+                }, 3000);
             },
             (error) => {
+                setMessage('Error registering user');
+                setMessageType('error');
+                setIsMessageVisible(true);
                 console.log('Error registering user:', error);
             }
         );
@@ -49,6 +84,12 @@ const RegisterScreen = ({navigation}) => {
     return (
         <View style={Styles.container}>
             <Text style={Styles.title}>Register</Text>
+            <MessageSnackBar
+                visible={isMessageVisible}
+                onDismiss={() => setIsMessageVisible(false)}
+                message={message}
+                type={messageType}
+            />
             <InputField
                 label="Email"
                 placeholder={'user@example.com'}
@@ -72,9 +113,9 @@ const RegisterScreen = ({navigation}) => {
                 secureTextEntry
             />
             <View style={Styles.buttonContainer}>
-                <Button icon={'account-plus'} mode="contained" onPress={handleRegister}>Register</Button>
-                <Button icon={'login'} mode="text" onPress={() => navigation.navigate('Login')}>Already have an
-                    account?</Button>
+                <CustomButton icon={'account-plus'} mode="contained" onPress={handleRegister}>Register</CustomButton>
+                <CustomButton icon={'login'} mode="text" onPress={() => navigation.navigate('Login')}>Already have an
+                    account?</CustomButton>
             </View>
         </View>
     );

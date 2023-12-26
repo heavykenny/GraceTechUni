@@ -2,9 +2,9 @@ import React, {useState} from 'react';
 import {Text, View} from 'react-native';
 import InputField from "../common/InputField";
 import Styles from "../../constants/styles";
-import Button from "../common/Button";
+import CustomButton from "../common/CustomButton";
 
-const ForgotPasswordScreen = () => {
+const ForgotPasswordScreen = ({navigation}) => {
     const [email, setEmail] = useState('');
 
     const handlePasswordReset = () => {
@@ -23,9 +23,9 @@ const ForgotPasswordScreen = () => {
                 keyboardType="email-address"
             />
             <View style={Styles.buttonContainer}>
-                <Button icon={'lock-reset'} mode="contained" onPress={handlePasswordReset}>Reset Password</Button>
-                <Button icon={'login'} mode="text" onPress={() => navigation.navigate('Login')}>Remembered your
-                    password?</Button>
+                <CustomButton icon={'lock-reset'} mode="contained" onPress={handlePasswordReset}>Reset Password</CustomButton>
+                <CustomButton icon={'login'} mode="text" onPress={() => navigation.navigate('Login')}>Remembered your
+                    password?</CustomButton>
             </View>
         </View>
     );

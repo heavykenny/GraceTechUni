@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
-import {SafeAreaView, ScrollView, View} from 'react-native';
+import {SafeAreaView, ScrollView, View, Text} from 'react-native';
 import {Card, Paragraph, Title} from 'react-native-paper';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 import Styles, {colorScheme} from "../../constants/styles";
 import CourseDetailsScreen from "./CourseDetailsScreen";
+import CustomHeader from "../common/CustomHeader";
 
 const HomeScreen = ({navigation}) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -13,7 +14,7 @@ const HomeScreen = ({navigation}) => {
         // Set the selected course details here
         setSelectedCourse({
             degree: "BSc", // Degree type e.g., BSc, Masters
-            name: "Introduction to Psychology",
+            name: "Computer Science",
             session: "2023-2024",
             modules: [{/* module details */}], // Array of module details
             duration: "4 years",
@@ -29,6 +30,9 @@ const HomeScreen = ({navigation}) => {
 
     return (
         <SafeAreaView style={[Styles.screenContainer, {backgroundColor: colorScheme.background}]}>
+            <CustomHeader
+                title="Home"
+            />
             <ScrollView style={Styles.scrollView} showsVerticalScrollIndicator={false} persistentScrollbar={false}>
                 <Card style={Styles.card}>
                     <Card.Content>

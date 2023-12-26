@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button as PaperButton} from 'react-native-paper';
 
-const Button = ({mode, style, ...props}) => {
+const CustomButton = ({mode, style, ...props}) => {
     let buttonStyle = {margin: 5};
     switch (mode) {
         case 'outlined':
@@ -45,7 +45,7 @@ const styles = {
     }
 };
 
-export default Button;
+export default CustomButton;
 
 // Usage:
 // <Button icon="camera" mode="contained" style={{ backgroundColor: 'blue', borderRadius: 10 }} onPress={handleLogin}>Login</Button>

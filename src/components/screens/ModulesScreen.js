@@ -4,7 +4,7 @@ import {Card, Paragraph, Title} from 'react-native-paper';
 import Styles from "../../constants/styles";
 import CustomHeader from "../common/CustomHeader";
 
-const CourseScreen = ({navigation}) => {
+const ModulesScreen = ({navigation}) => {
     const courses = [
         {
             id: '1',
@@ -49,4 +49,4 @@ const CourseScreen = ({navigation}) => {
 };
 
 
-export default CourseScreen;
+export default ModulesScreen;

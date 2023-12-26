@@ -1,7 +1,7 @@
 import React from 'react';
 import {Card, Modal, Paragraph, Portal} from 'react-native-paper';
 import Styles from "../../constants/styles";
-import Button from "../common/Button";
+import CustomButton from "../common/CustomButton";
 
 const CourseDetailsScreen = ({visible, hideModal, courseDetails}) => {
     return (
@@ -27,7 +27,7 @@ const CourseDetailsScreen = ({visible, hideModal, courseDetails}) => {
                         {/* You can add more course-related information here */}
                     </Card.Content>
                     <Card.Actions>
-                        <Button icon={'close'} mode="contained" onPress={hideModal}>Close</Button>
+                        <CustomButton icon={'close'} mode="contained" onPress={hideModal}>Close</CustomButton>
                     </Card.Actions>
                 </Card>
             </Modal>

@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
-import {SafeAreaView, ScrollView, View} from 'react-native';
+import {SafeAreaView, ScrollView, Text, View} from 'react-native';
 import {Card, Paragraph, Title} from 'react-native-paper';
 import Styles from "../../constants/styles";
-import Button from "../common/Button";
+import CustomButton from "../common/CustomButton";
 import InputField from "../common/InputField";
+import CustomHeader from "../common/CustomHeader";
 
-const AttendanceScreen = () => {
+const AttendanceScreen = ({navigation}) => {
     const [attendanceCode, setAttendanceCode] = useState('');
     const [attendanceRecords, setAttendanceRecords] = useState([
         // Example data
@@ -26,6 +27,9 @@ const AttendanceScreen = () => {
 
     return (
         <SafeAreaView style={Styles.screenContainer}>
+            <CustomHeader
+                title="Attendance"
+            />
             <ScrollView style={Styles.scrollView}>
                 <View style={Styles.checkInSection}>
                     <InputField
@@ -38,8 +42,8 @@ const AttendanceScreen = () => {
                     />
                     {/*<Button icon={'login'} mode="contained" style={{backgroundColor: 'blue', fontSize: 40}}*/}
                     {/*        onPress={handleLogin}>Login</Button>*/}
-                    <Button icon={'qrcode-scan'} mode="contained" style={{backgroundColor: 'blue', fontSize: 40}}
-                            onPress={handleCheckInCode}>Check In</Button>
+                    <CustomButton icon={'qrcode-scan'} mode="contained" style={{backgroundColor: 'blue', fontSize: 40}}
+                                  onPress={handleCheckInCode}>Check In</CustomButton>
                     {/*<QRCodeScanner*/}
                     {/*    onRead={handleQRCodeScanned}*/}
                     {/*    // Additional QRCodeScanner props*/}

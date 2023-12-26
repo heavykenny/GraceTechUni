@@ -76,7 +76,6 @@ export const getUser = async () => {
     }
 };
 
-
 // generate student id number - 6 digits
 export const generateStudentId = () => {
     const min = 100000;
@@ -87,8 +86,6 @@ export const generateStudentId = () => {
 // update user profile
 export const updateUserProfile = async (userData) => {
     try {
-        console.log(userData);
-        // doc(db, 'UserMD', userData.uid).update(userData);
         return await setDoc(doc(getFirestoreDB, 'UserMD', userData.uid), userData);
     } catch (error) {
         throw error;
@@ -120,7 +117,6 @@ const getUserDetailsByUID = async (uid) => {
         const q = query(collection(getFirestoreDB, "UserMD"), where("uid", "==", uid));
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
-            console.log(doc.id, "=>", doc.data());
             dataQuery.push(doc.data());
         });
         return dataQuery[0];

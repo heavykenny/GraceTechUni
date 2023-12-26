@@ -27,18 +27,20 @@ const Styles = StyleSheet.create({
         margin: 10
     },
     title: {
-        marginTop: 20,
-        fontSize: 24,
-        marginBottom: 20,
+        // marginTop: 10,
+        fontSize: 20,
+        // marginBottom: 20,
         textAlign: 'center'
     },
     buttonContainer: {
-        marginTop: 20
+        marginTop: 20,
+        marginBottom: 20
     },
     screenContainer: {
         flex: 1,
     },
     scrollView: {
+        paddingTop: 5,
         marginHorizontal: 10,
     },
     card: {
@@ -79,7 +81,8 @@ const Styles = StyleSheet.create({
     drawerHeader: {
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 15,
+        marginTop: 20,
+        padding: 20,
         backgroundColor: '#f4f4f4', // or any color that fits your theme
         borderBottomWidth: 1,
         borderBottomColor: '#dedede'
@@ -188,10 +191,10 @@ const Styles = StyleSheet.create({
         marginVertical: 10,
     },
     modalView: {
-        marginTop: 100, // Space from the top
-        marginBottom: 20, // Space from the bottom
-        marginLeft: 20, // Space from the left
-        marginRight: 20, // Space from the right
+        marginTop: 50, // Space from the top
+        marginBottom: 0, // Space from the bottom
+        marginLeft: 10, // Space from the left
+        marginRight: 10, // Space from the right
         backgroundColor: "white",
         borderRadius: 20,
         padding: 35,
