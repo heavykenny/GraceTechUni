@@ -20,6 +20,7 @@ const MessageSnackBar = ({visible, onDismiss, message, type = 'error'}) => {
 
 const styles = StyleSheet.create({
     container: {
+        paddingTop: 10,
         justifyContent: 'space-between',
     },
     text: {

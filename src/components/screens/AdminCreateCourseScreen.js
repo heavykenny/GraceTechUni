@@ -1,19 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {FlatList, Modal, SafeAreaView, Text, View} from 'react-native';
 import {Card, Checkbox, List, Paragraph, Title} from 'react-native-paper';
 import InputField from "../common/InputField";
 import CustomButton from "../common/CustomButton";
 import FAButton from "../common/FAButton";
 import Styles from "../../constants/styles";
-import {
-    attachUsersToCourse,
-    createNewCourse,
-    deleteCourse,
-    getAllCourses,
-    updateCourse
-} from "../../services/firebase/course";
+import {createNewCourse, deleteCourse, getAllCourses, updateCourse} from "../../services/firebase/course";
 import CustomHeader from "../common/CustomHeader";
-import {getAllUsers} from "../../services/firebase/user";
+import {attachedCourseToUsers, detachCourseFromUser, getAllUsers} from "../../services/firebase/user";
 
 const AdminCreateCourseScreen = ({navigation}) => {
     // State initializations
@@ -35,27 +29,48 @@ const AdminCreateCourseScreen = ({navigation}) => {
     const [attachedUsers, setAttachedUsers] = useState([]); // Consider how you're storing attached user data
 
     useEffect(() => {
-        getAllCourses().then(setCourses);
-        getAllUsers().then(setUserList);
+        const fetchData = async () => {
+            try {
+                const coursesData = await getAllCourses();
+                setCourses(coursesData);
+                const usersData = await getAllUsers();
+                setUserList(usersData);
+            } catch (error) {
+                console.error("Error loading data: ", error);
+            }
+        };
+        fetchData().then(r => r);
     }, []);
 
-    // Function to handle attaching or detaching users
-    const handleAttachUsers = (user) => {
-        // Check if user is attached
-        if (attachedUsers.includes(user.uid)) {
-            // Detach user
-            const newAttachedUsers = attachedUsers.filter((uid) => uid !== user.uid);
-            setAttachedUsers(newAttachedUsers);
-        } else {
-            // Attach user
-            const newAttachedUsers = [...attachedUsers, user.uid];
-            setAttachedUsers(newAttachedUsers);
-        }
-        //Update course with attached users
-        attachUsersToCourse(selectedCourse.id, attachedUsers).then(() => {
-            getAllCourses().then(setCourses);
+    const renderEmptyCourses = () => (<View style={Styles.emptyCoursesContainer}>
+        <Text style={Styles.emptyCoursesText}>There are no courses available. Please create a new one.</Text>
+        <CustomButton style={{marginTop: 30}} mode={'outlined'} onPress={handleCreateCourse}>Create
+            Course</CustomButton>
+    </View>);
+
+    const handleAttachUsers = useCallback((user) => {
+        setAttachedUsers((currentAttachedUsers) => {
+            if (currentAttachedUsers.includes(user.uid)) {
+                // Detach user
+                detachCourseFromUser(user.uid).then(r => {
+                    getAllUsers().then(setUserList);
+                });
+                return currentAttachedUsers.filter((uid) => uid !== user.uid);
+            } else {
+                // Attach user
+                return [...currentAttachedUsers, user.uid];
+            }
         });
-    };
+    }, []);
+
+    const handleAttachUsersSubmit = async (courseId, users) => {
+        try {
+            await attachedCourseToUsers(courseId, users);
+            getAllUsers().then(setUserList);
+        } catch (error) {
+            console.error("Failed to attach users to course: ", error);
+        }
+    }
 
     const openEditModal = (course) => {
         // Set form with course values
@@ -83,9 +98,7 @@ const AdminCreateCourseScreen = ({navigation}) => {
             credits: parseInt(credits, 10),
         };
 
-        const action = selectedCourse ?
-            updateCourse(selectedCourse.courseId, courseData) :
-            createNewCourse(courseData);
+        const action = selectedCourse ? updateCourse(selectedCourse.id, courseData) : createNewCourse(courseData);
 
         action.then(() => {
             resetForm();
@@ -108,6 +121,10 @@ const AdminCreateCourseScreen = ({navigation}) => {
         setEditModalVisible(false);
     };
 
+    const filterCourse = (courseUid) => {
+        return courses.filter((course) => course.id === courseUid);
+    }
+
 
     const handleCreateCourse = () => {
         resetForm();
@@ -116,122 +133,117 @@ const AdminCreateCourseScreen = ({navigation}) => {
 
     const handleEdit = (course) => () => openEditModal(course);
 
-    const handleDelete = (courseId) => () => {
-        deleteCourse(courseId).then(() => {
+    const handleDelete = (id) => () => {
+        deleteCourse(id).then(() => {
             getAllCourses().then(setCourses);
         });
     };
 
-    const renderCourse = ({item}) => (
-        <Card style={Styles.card}>
-            <Card.Content>
-                <Title>{item.name} ({item.degree})</Title>
-                <Paragraph>Department: {item.department}</Paragraph>
-                <Paragraph>Faculty: {item.faculty}</Paragraph>
-                <Paragraph>Duration: {item.duration}</Paragraph>
-                <Paragraph>Credits: {item.credits}</Paragraph>
-                <Paragraph>Session: {item.session}</Paragraph>
-                <Paragraph>Status: {item.isActive ? 'Active' : 'Inactive'}</Paragraph>
-            </Card.Content>
-            <Card.Actions>
-                <CustomButton onPress={handleEdit(item)}>Edit</CustomButton>
-                <CustomButton onPress={handleDelete(item)}>Delete</CustomButton>
-                <CustomButton onPress={() => {
-                    setSelectedCourse(item);
-                    setUserSelectionModalVisible(true);
-                }}>
-                    Attach Users
-                </CustomButton>
-            </Card.Actions>
-        </Card>
-    );
+    const renderCourse = ({item}) => (<Card style={Styles.card}>
+        <Card.Content>
+            <Title>{item.name} ({item.degree})</Title>
+            <Paragraph>Department: {item.department}</Paragraph>
+            <Paragraph>Faculty: {item.faculty}</Paragraph>
+            <Paragraph>Duration: {item.duration}</Paragraph>
+            <Paragraph>Credits: {item.credits}</Paragraph>
+            <Paragraph>Session: {item.session}</Paragraph>
+            <Paragraph>Status: {item.isActive ? 'Active' : 'Inactive'}</Paragraph>
+        </Card.Content>
+        <Card.Actions>
+            <CustomButton onPress={handleEdit(item)}>Edit</CustomButton>
+            <CustomButton onPress={handleDelete(item)}>Delete</CustomButton>
+            <CustomButton onPress={() => {
+                setSelectedCourse(item);
+                setUserSelectionModalVisible(true);
+            }}>
+                Attach Students
+            </CustomButton>
+        </Card.Actions>
+    </Card>);
 
-    const renderUserSelectionItem = ({item}) => (
-        <List.Item
-            title={item.displayName}
-            description={() => (
-                <>
-                    <Text>ID: {item.studentId}</Text>
-                    <Text>Email: {item.email}</Text>
-                </>
-            )}
-            right={props =>
-                <CustomButton onPress={() => handleAttachUsers(item)}>
-                    {attachedUsers.includes(item.uid) ? 'Detach' : 'Attach'}
-                </CustomButton>
-            }
+    const renderUserSelectionItem = ({item}) => (<List.Item
+        title={item.displayName}
+        description={() => (<>
+            <Text>ID: {item.studentId}</Text>
+            <Text>Email: {item.email}</Text>
+            <Text>Courses: {filterCourse(item.courseUid).map((course) => course.name).join(', ')}</Text>
+        </>)}
+        right={props => <CustomButton onPress={() => handleAttachUsers(item)}>
+            {(item.courseUid) || (attachedUsers.includes(item.uid)) ? 'Detach' : 'Attach'}
+        </CustomButton>}
+    />);
+
+    return (<SafeAreaView style={Styles.screenContainer}>
+        <CustomHeader
+            title={'Create Course'}
         />
-    );
 
-    return (
-        <SafeAreaView style={Styles.screenContainer}>
-            <CustomHeader
-                title={'Create Course'}
-            />
-
-            <FlatList
-                data={courses}
-                renderItem={renderCourse}
-                keyExtractor={(item) => item.courseId}
-                contentContainerStyle={{padding: 5}}
-            />
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={editModalVisible}
-                onRequestClose={resetForm}
-            >
-                <View style={Styles.modalView}>
-                    <Title style={Styles.title}>{selectedCourse ? 'Edit Course' : 'Create New Course'}</Title>
-                    <InputField label="Course Name" value={courseName} onChangeText={setCourseName}/>
-                    <InputField label="Degree Type (e.g., BSc, Masters)" value={degreeType}
-                                onChangeText={setDegreeType}/>
-                    <InputField label="Academic Session (e.g., 2023-2024)" value={session}
-                                onChangeText={setSession}/>
-                    <InputField label="Duration (e.g., 4 years)" value={duration} onChangeText={setDuration}/>
-                    <InputField label="Faculty" value={faculty} onChangeText={setFaculty}/>
-                    <InputField label="Department" value={department} onChangeText={setDepartment}/>
-                    <InputField label="Total Credits" value={credits} onChangeText={setCredits}
-                                keyboardType="numeric"/>
-                    <View style={{flexDirection: 'row', alignItems: 'center', marginVertical: 10}}>
-                        <Checkbox status={isActive ? 'checked' : 'unchecked'}
-                                  onPress={() => setIsActive(!isActive)}/>
-                        <Text>Is Active Course?</Text>
-                    </View>
-
-                    <View style={Styles.buttonContainer}>
-                        <CustomButton onPress={resetForm} icon={'close'} mode={'outlined'}>Cancel</CustomButton>
-                        <CustomButton mode={'contained'} onPress={handleSubmit} icon="check">
-                            {selectedCourse ? 'Update Course' : 'Create Course'}
-                        </CustomButton>
-                    </View>
+        <FlatList
+            data={courses}
+            renderItem={renderCourse}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={{padding: 5}}
+            ListEmptyComponent={renderEmptyCourses}
+        />
+        <Modal
+            animationType="slide"
+            transparent={true}
+            visible={editModalVisible}
+            onRequestClose={resetForm}
+        >
+            <View style={Styles.modalView}>
+                <Title style={Styles.title}>{selectedCourse ? 'Edit Course' : 'Create New Course'}</Title>
+                <InputField label="Course Name" value={courseName} onChangeText={setCourseName}/>
+                <InputField label="Degree Type (e.g., BSc, Masters)" value={degreeType}
+                            onChangeText={setDegreeType}/>
+                <InputField label="Academic Session (e.g., 2023-2024)" value={session}
+                            onChangeText={setSession}/>
+                <InputField label="Duration (e.g., 4 years)" value={duration} onChangeText={setDuration}/>
+                <InputField label="Faculty" value={faculty} onChangeText={setFaculty}/>
+                <InputField label="Department" value={department} onChangeText={setDepartment}/>
+                <InputField label="Total Credits" value={credits} onChangeText={setCredits}
+                            keyboardType="numeric"/>
+                <View style={{flexDirection: 'row', alignItems: 'center', marginVertical: 10}}>
+                    <Checkbox status={isActive ? 'checked' : 'unchecked'}
+                              onPress={() => setIsActive(!isActive)}/>
+                    <Text>Is Active Course?</Text>
                 </View>
-            </Modal>
 
-            <Modal
-                visible={userSelectionModalVisible}
-                onRequestClose={() => setUserSelectionModalVisible(false)}>
-                <View style={Styles.userList}>
-                    <FlatList
-                        data={userList}
-                        renderItem={renderUserSelectionItem}
-                        keyExtractor={(item) => item.id}
-                    />
-                    <CustomButton onPress={() => setUserSelectionModalVisible(false)}>
-                        Close
+                <View style={Styles.buttonContainer}>
+                    <CustomButton onPress={resetForm} icon={'close'} mode={'outlined'}>Cancel</CustomButton>
+                    <CustomButton mode={'contained'} onPress={handleSubmit} icon="check">
+                        {selectedCourse ? 'Update Course' : 'Create Course'}
                     </CustomButton>
                 </View>
-            </Modal>
-
-
-            <View style={{position: 'absolute', bottom: 0, right: 0}}>
-                <FAButton
-                    onPress={handleCreateCourse}
-                    icon="pencil"
-                />
             </View>
-        </SafeAreaView>
-    );
+        </Modal>
+
+        <Modal
+            visible={userSelectionModalVisible}
+            onRequestClose={() => setUserSelectionModalVisible(false)}>
+            <View style={Styles.userList}>
+                <FlatList
+                    data={userList}
+                    renderItem={renderUserSelectionItem}
+                    keyExtractor={(item) => item.id}
+                />
+                <CustomButton onPress={() => {
+                    setUserSelectionModalVisible(false)
+                    handleAttachUsersSubmit(selectedCourse.id, attachedUsers).then(r => r);
+                }}>
+                    Close
+                </CustomButton>
+            </View>
+        </Modal>
+
+
+        <View style={{position: 'absolute', bottom: 0, right: 0}}>
+            <FAButton
+                onPress={handleCreateCourse}
+                icon="pencil"
+            />
+        </View>
+    </SafeAreaView>);
 };
 
 export default AdminCreateCourseScreen;

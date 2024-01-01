@@ -18,6 +18,7 @@ export const registerWithEmail = async (userData) => {
             displayName: '',
             photoURL: 'https://i.imgur.com/7k12EPD.png',
             role: 'student',
+            courseUid: '',
             createdAt: new Date(),
             updatedAt: new Date()
         };

@@ -15,7 +15,6 @@ const LoginScreen = ({navigation}) => {
     const [password, setPassword] = useState('');
     const {login} = useAuth();
     const [isLoading, setIsLoading] = useState(false);
-    const [userModel, setUserModel] = useState(UserModel.fromJSON({}));
     const {updateUserDetails} = useUser();
     const [isMessageVisible, setIsMessageVisible] = useState(false);
     const [message, setMessage] = useState('');
@@ -30,7 +29,6 @@ const LoginScreen = ({navigation}) => {
         try {
             const user = await loginWithEmail(email, password);
             const userModel = UserModel.fromJSON(user);
-            setUserModel(userModel);
             await dataStorage("userObject", UserModel.toJSON(userModel));
             updateUserDetails(userModel);
             displayMessage('Login successful', 'success');
@@ -51,34 +49,28 @@ const LoginScreen = ({navigation}) => {
     }
 
     useEffect(() => {
-        isUserLoggedIn().then(
-            (user) => {
-                if (user) {
-                    console.log('User is logged in:', user);
-                    login();
-                } else {
-                    setIsLoading(false);
-                }
-            },
-            (error) => {
-                console.log('Error checking if user is logged in:', error);
+        isUserLoggedIn().then((user) => {
+            if (user) {
+                console.log('User is logged in:', user);
+                login();
+            } else {
+                setIsLoading(false);
             }
-        );
+        }, (error) => {
+            console.log('Error checking if user is logged in:', error);
+        });
         setIsLoading(false);
     }, []);
 
 
     if (isLoading) {
-        return (
-            <View style={Styles.container}>
+        return (<View style={Styles.container}>
                 <ActivityIndicator size="large" color="#0000ff"/>
-            </View>
-        );
+            </View>);
     }
 
 
-    return (
-        <SafeAreaView style={Styles.screenContainer}>
+    return (<SafeAreaView style={Styles.screenContainer}>
             <View style={Styles.container}>
                 <MessageSnackBar visible={isMessageVisible} onDismiss={() => setIsMessageVisible(false)}
                                  message={message} type={messageType}/>
@@ -96,8 +88,7 @@ const LoginScreen = ({navigation}) => {
                         an account? Register</CustomButton>
                 </View>
             </View>
-        </SafeAreaView>
-    );
+        </SafeAreaView>);
 };
 
 export default LoginScreen;
