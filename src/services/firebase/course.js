@@ -3,22 +3,42 @@ import {addDoc, collection, doc, getDocs, query, setDoc, where} from 'firebase/f
 
 export const createNewCourse = async (course) => {
     try {
+        // Adding the course to the 'CourseMD' collection
+        const courseRef = await addDoc(collection(getFirestoreDB, 'CourseMD'), course);
+
+        // You might want to generate the course code first before adding the document
+        const courseCode = generateCourseId(course.name);
+
+        // Define additional metadata to add/merge with the document
         const additionalData = {
-            ...course,
-            courseId: generateCourseId(course.name),
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            id: courseRef.id, // Set the document's ID
+            courseCode: courseCode, // Set the course code
+            createdAt: new Date(), // Set creation date
+            updatedAt: new Date(), // Set the initial update date
         };
-        const courseRef = await addDoc(collection(getFirestoreDB, 'CourseMD'), additionalData);
-        return courseRef.id;
-    } catch (error) {
+
+        // Update the newly created document with additional data
+        // Here, setDoc is used with merge:true to update the document rather than overwrite it
+        await setDoc(courseRef, additionalData, { merge: true });
+
+        // Create the complete course object to return
+        const courseWithMeta = {
+            ...course,
+            ...additionalData
+        };
+
+        // Return the new course data
+        return courseWithMeta;
+    }
+    catch (error) {
         throw error;
     }
-}
+};
 
 export const generateCourseId = (courseTitle) => {
     // Generate a course ID from the course title - BSC Computer Science => BSCCS9203
-    const courseCode = courseTitle.replace(/\s/g, '').toUpperCase();
+    // take first 5 characters of course title, remove spaces, convert to uppercase
+    const courseCode = courseTitle.substring(0, 5).replace(/\s/g, '').toUpperCase();
     return `${courseCode}-${Math.floor(1000 + Math.random() * 9000)}`;
 }
 export const updateCourse = async (course) => {
@@ -64,6 +84,17 @@ export const deleteCourse = async (courseId) => {
     try {
         const courseRef = doc(getFirestoreDB, 'CourseMD', courseId);
         await setDoc(courseRef, {deletedAt: new Date()}, {merge: true});
+        return courseRef.id;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const attachUsersToCourse = async (courseId, users) => {
+    try {
+        console.log(courseId, users);
+        const courseRef = doc(getFirestoreDB, 'CourseMD', courseId);
+        await setDoc(courseRef, {users: users}, {merge: true});
         return courseRef.id;
     } catch (error) {
         throw error;
