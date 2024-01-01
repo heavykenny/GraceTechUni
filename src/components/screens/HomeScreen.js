@@ -25,7 +25,6 @@ const HomeScreen = ({navigation}) => {
                 const userData = UserModel.fromJSON(user);
                 if (userData.courseUid) {
                     const courseDetails = await getCourseDetails(userData.courseUid);
-                    console.log('Course details:', courseDetails);
                     setSelectedCourse(courseDetails);
                 } else {
                     // Handle case where no course is enrolled

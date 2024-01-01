@@ -23,8 +23,6 @@ const CourseDetailsScreen = ({visible, hideModal, courseDetails}) => {
                             Status: {courseDetails.isActive ? 'Active' : 'Inactive'}</Paragraph>
                         <Paragraph style={Styles.paragraph}>Department: {courseDetails.department}</Paragraph>
                         <Paragraph style={Styles.paragraph}>Credits Required: {courseDetails.credits}</Paragraph>
-                        <Paragraph style={Styles.paragraph}>Current GPA: {courseDetails.gpa}</Paragraph>
-                        {/* You can add more course-related information here */}
                     </Card.Content>
                     <Card.Actions>
                         <CustomButton icon={'close'} mode="contained" onPress={hideModal}>Close</CustomButton>

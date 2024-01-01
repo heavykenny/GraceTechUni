@@ -19,18 +19,13 @@ export const createNewCourse = async (course) => {
 
         // Update the newly created document with additional data
         // Here, setDoc is used with merge:true to update the document rather than overwrite it
-        await setDoc(courseRef, additionalData, { merge: true });
+        await setDoc(courseRef, additionalData, {merge: true});
 
         // Create the complete course object to return
-        const courseWithMeta = {
-            ...course,
-            ...additionalData
+        return {
+            ...course, ...additionalData
         };
-
-        // Return the new course data
-        return courseWithMeta;
-    }
-    catch (error) {
+    } catch (error) {
         throw error;
     }
 };

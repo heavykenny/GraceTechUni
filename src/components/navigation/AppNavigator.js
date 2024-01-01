@@ -21,7 +21,7 @@ const AppNavigator = () => {
 
     const adminRoutes = [
         { key: 'admin_course', title: 'Course', focusedIcon: 'book-plus', unfocusedIcon: 'book-plus-outline' },
-        { key: 'admin_users', title: 'Users', focusedIcon: 'account-group', unfocusedIcon: 'account-group-outline' },
+        { key: 'admin_users', title: 'Students', focusedIcon: 'account-group', unfocusedIcon: 'account-group-outline' },
         { key: 'admin_manage', title: 'Manage', focusedIcon: 'account-cog', unfocusedIcon: 'account-cog-outline' },
         { key: 'admin_profile', title: 'Profile', focusedIcon: 'account', unfocusedIcon: 'account-outline' },
     ];

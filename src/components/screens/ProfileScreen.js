@@ -47,7 +47,6 @@ const ProfileScreen = ({navigation}) => {
                 const user = await getUser();
                 if (user) {
                     const userData = UserModel.fromJSON(user);
-                    console.log('User data:', userData);
                     setOriginalStudentInfo(userData);
                     setUserModel(userData);
                     setIsLoading(false);
