@@ -231,9 +231,12 @@ const Styles = StyleSheet.create({
         backgroundColor: 'white', // Choose a background color that matches your theme
         borderRadius: 12, // Half of icon size to make it circular
         padding: 2,
+    },
+    userList: {
+        padding: 10,
+        backgroundColor: 'white',
+        borderRadius: 5,
     }
-
-
 });
 
 export default Styles;
