@@ -35,3 +35,17 @@ export const userCreatePost = async (post) => {
         throw error;
     }
 }
+
+export const getCourseTimelineData = async (courseId) => {
+    try {
+        const q = query(collection(getFirestoreDB, "PostMD"), where("isCourseTimeline", "==", true), where("courseId", "==", courseId));
+        const querySnapshot = await getDocs(q);
+        const posts = [];
+        querySnapshot.forEach((doc) => {
+            posts.push(doc.data());
+        });
+        return posts.sort((a, b) => b.createdAt - a.createdAt);
+    } catch (error) {
+        throw error;
+    }
+}
