@@ -20,11 +20,7 @@ const GlobalTimelineScreen = ({navigation}) => {
 
     const fetchData = async () => {
         try {
-            const [users, courses, timelineData] = await Promise.all([
-                getAllUsers(),
-                getAllCourses(),
-                getGlobalTimelineData(),
-            ]);
+            const [users, courses, timelineData] = await Promise.all([getAllUsers(), getAllCourses(), getGlobalTimelineData(),]);
             setAllUsers(users);
             setCourses(courses);
             setFirst5Courses(courses.slice(0, 5));
@@ -35,24 +31,22 @@ const GlobalTimelineScreen = ({navigation}) => {
     };
 
     // Call fetchData when the screen comes into focus
-    useFocusEffect(
-        React.useCallback(() => {
-            fetchData().then(r => r);
-            // Optional: Return a function that specifies any cleanup actions
-        }, [])
-    );
+    useFocusEffect(React.useCallback(() => {
+        fetchData().then(r => r);
+        // Optional: Return a function that specifies any cleanup actions
+    }, []));
 
     useEffect(() => {
         fetchData().then(r => r);
     }, []);
 
     const openCourseTimeline = (courseId) => {
-        setVisible(false)
-        navigation.navigate('CourseTimeline', {courseId});
+        setVisible(false);
+        navigation.navigate('CourseTimeline', {courseId: courseId});
     };
 
     const filterUser = (userUid) => {
-        return allUsers.filter((user) => user.uid === userUid)[0];
+        return allUsers.find((user) => user.uid === userUid) || {};
     }
 
     const renderEmptyPosts = () => (<View style={Styles.emptyCoursesContainer}>
