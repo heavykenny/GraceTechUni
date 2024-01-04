@@ -1,60 +1,80 @@
 import React, {useEffect, useState} from 'react';
-import {Button, StyleSheet, TextInput, View} from 'react-native';
-import {userCreatePost} from "../../services/firebase/post";
-import {getUser} from "../../services/firebase/auth";
+import {View} from 'react-native';
+import {Appbar} from 'react-native-paper';
+import InputField from "../common/InputField";
+import CustomButton from "../common/CustomButton";
+import MessageSnackBar from "../common/MessageSnackBar";
 import Styles from "../../constants/styles";
-import {Appbar} from "react-native-paper";
+import {getUser} from "../../services/firebase/auth";
+import {userCreatePost} from "../../services/firebase/post";
 
 const CreatePostScreen = ({route, navigation}) => {
     const [postContent, setPostContent] = useState('');
-    let {context, courseId} = route.params;
+    const [user, setUser] = useState(null);
+    const [isMessageVisible, setIsMessageVisible] = useState(false);
+    const [message, setMessage] = useState('');
+    const [messageType, setMessageType] = useState('');
+
+    const {context, courseId = ''} = route.params;
     const isCourseTimeline = context === 'course';
-    courseId = courseId || '';
-    const [user, setUser] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const user = await getUser();
-                setUser(user);
+                const userData = await getUser();
+                setUser(userData);
             } catch (error) {
-                console.error("Error loading data: ", error);
+                console.error("Error loading user data: ", error);
             }
         };
         fetchData().then(r => r);
     }, []);
 
-    const handlePostSubmit = () => {
+    const handlePostSubmit = async () => {
+        if (postContent.trim().length < 1) {
+            setIsMessageVisible(true);
+            setMessage('Please enter some content');
+            setMessageType('error');
+            return;
+        }
+
         const postData = {
-            content: postContent, isCourseTimeline, courseId, userUid: user.uid,
+            content: postContent, isCourseTimeline, courseId, userUid: user?.uid,
         };
-        userCreatePost(postData).then(r => r);
-        navigation.goBack();
-        // refresh the timeline
+
+        try {
+            await userCreatePost(postData);
+            navigation.goBack();
+        } catch (error) {
+            console.error("Error creating post: ", error);
+            setMessage('Failed to create post');
+            setMessageType('error');
+            setIsMessageVisible(true);
+        }
     };
 
-    return (<View style={styles.container}>
-        <Appbar.Header style={Styles.appbar} statusBarHeight={0} mode={'small'}>
-            <Appbar.BackAction style={Styles.backAction} onPress={() => navigation.goBack()}/>
-            <Appbar.Content titleStyle={Styles.appbarContent} title="Back"/>
+    return (<View style={Styles.createPostContainer}>
+        <Appbar.Header style={Styles.appbar}>
+            <Appbar.BackAction onPress={() => navigation.goBack()}/>
+            <Appbar.Content titleStyle={Styles.appbarContent} title="Create Post"/>
         </Appbar.Header>
-        <TextInput
-            style={styles.textInput}
-            multiline
-            placeholder="What's on your mind?"
-            value={postContent}
-            onChangeText={setPostContent}
+        <MessageSnackBar
+            visible={isMessageVisible}
+            onDismiss={() => setIsMessageVisible(false)}
+            message={message}
+            type={messageType}
         />
-        <Button title="Post" onPress={handlePostSubmit}/>
+        <View style={Styles.scrollView}>
+            <InputField
+                value={postContent}
+                onChangeText={setPostContent}
+                multiline
+                placeholder="What's on your mind?"
+                style={Styles.textInput}
+            />
+            <CustomButton mode={'outlined'} onPress={handlePostSubmit}>Post</CustomButton>
+        </View>
     </View>);
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1, padding: 10,
-    }, textInput: {
-        height: 150, borderColor: 'gray', borderWidth: 1, marginBottom: 10, padding: 10, textAlignVertical: 'top',
-    },
-});
 
 export default CreatePostScreen;

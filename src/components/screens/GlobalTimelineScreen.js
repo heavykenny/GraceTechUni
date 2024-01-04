@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, SafeAreaView, TouchableOpacity, View} from 'react-native';
-import {Appbar, Card, Divider, Modal, Paragraph, Portal, Text} from 'react-native-paper';
+import {FlatList, SafeAreaView, TouchableOpacity, View, StyleSheet, Image} from 'react-native';
+import {Appbar, Card, Divider, Modal, Paragraph, Portal, Text, Avatar} from 'react-native-paper';
 import Styles from "../../constants/styles";
 import FAButton from "../common/FAButton";
 import {getAllCourses} from "../../services/firebase/course";
@@ -8,6 +8,7 @@ import {getGlobalTimelineData} from "../../services/firebase/post";
 import {getAllUsers} from "../../services/firebase/user";
 import {convertTimestamp} from "../../utils/helpers";
 import {useFocusEffect} from "@react-navigation/native";
+import PostComponent from "../common/PostComponent";
 
 const GlobalTimelineScreen = ({navigation}) => {
     const [posts, setPosts] = useState([]);
@@ -54,13 +55,9 @@ const GlobalTimelineScreen = ({navigation}) => {
     </View>);
 
     // Render global posts
-    const renderPost = ({item}) => (<Card style={Styles.card}>
-        <Card.Title title={filterUser(item.userUid).displayName}
-                    subtitle={convertTimestamp(item.createdAt).toLocaleString()}/>
-        <Card.Content>
-            <Paragraph>{item.content}</Paragraph>
-        </Card.Content>
-    </Card>);
+    const renderPost = ({item}) => (
+        <PostComponent item={item} user={filterUser(item.userUid)}/>
+    );
 
     // Render courses for top navigation
     const renderCourseTab = (courseId, index) => (<View key={index}>
@@ -76,7 +73,7 @@ const GlobalTimelineScreen = ({navigation}) => {
         <View style={Styles.scrollView}>
             <Appbar.Header style={Styles.appbar} statusBarHeight={0} mode={'small'}>
                 <Appbar.BackAction style={Styles.backAction} onPress={() => navigation.goBack()}/>
-                <Appbar.Content titleStyle={Styles.appbarContent} title="Back"/>
+                <Appbar.Content titleStyle={Styles.appbarContent} title="Global Timeline"/>
             </Appbar.Header>
             <View style={Styles.courseTabsContainer}>
                 {first5courses.map((course, index) => renderCourseTab(course.courseCode, index))}
