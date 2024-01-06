@@ -205,6 +205,7 @@ const AdminCreateCourseScreen = ({navigation}) => {
                             keyboardType="numeric"/>
                 <View style={{flexDirection: 'row', alignItems: 'center', marginVertical: 10}}>
                     <Checkbox status={isActive ? 'checked' : 'unchecked'}
+
                               onPress={() => setIsActive(!isActive)}/>
                     <Text>Is Active Course?</Text>
                 </View>

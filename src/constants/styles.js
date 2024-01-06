@@ -19,7 +19,7 @@ const Styles = StyleSheet.create({
         fontSize: 20,
         textAlign: 'center'
     }, buttonContainer: {
-        marginTop: 20
+        marginTop: 10
     }, screenContainer: {
         flex: 1,
     }, scrollView: {

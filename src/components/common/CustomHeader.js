@@ -7,7 +7,7 @@ const CustomHeader = ({title, onBackPress, showBackButton = false, rightComponen
     const insets = useSafeAreaInsets(); // Get safe area insets
 
     return (
-        <View style={{paddingTop: insets.top}}>
+        <View >
             <View style={styles.container}>
                 <StatusBar barStyle="dark-content" backgroundColor="#fff"/>
                 {showBackButton && (
@@ -25,14 +25,13 @@ const CustomHeader = ({title, onBackPress, showBackButton = false, rightComponen
 };
 const styles = StyleSheet.create({
     container: {
-        height: 50, // Adjust the height as needed
+        height: 50,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
         paddingHorizontal: 10,
-        backgroundColor: '#fff', // Choose your app theme color
-        elevation: 2, // for android
-        shadowOpacity: 0.1, // for ios
+        backgroundColor: '#fff',
+        elevation: 2,
     },
     backButton: {
         position: 'absolute',
