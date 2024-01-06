@@ -162,13 +162,14 @@ const AdminCreateCourseScreen = ({navigation}) => {
     </Card>);
 
     const renderUserSelectionItem = ({item}) => (<List.Item
+        style={Styles.userListModalView}
         title={item.displayName}
         description={() => (<>
             <Text>ID: {item.studentId}</Text>
             <Text>Email: {item.email}</Text>
             <Text>Courses: {filterCourse(item.courseUid).map((course) => course.name).join(', ')}</Text>
         </>)}
-        right={props => <CustomButton onPress={() => handleAttachUsers(item)}>
+        right={props => <CustomButton mode={'outlined'} onPress={() => handleAttachUsers(item)}>
             {(item.courseUid) || (attachedUsers.includes(item.uid)) ? 'Detach' : 'Attach'}
         </CustomButton>}
     />);
@@ -178,13 +179,31 @@ const AdminCreateCourseScreen = ({navigation}) => {
             title={'Admin Manage Courses'}
         />
 
-        <FlatList
+        {!userSelectionModalVisible && (<FlatList
             data={courses}
             renderItem={renderCourse}
             keyExtractor={(item) => item.id}
             contentContainerStyle={{padding: 5}}
             ListEmptyComponent={renderEmptyCourses}
-        />
+        />)}
+        {userSelectionModalVisible && (<View>
+                <Title style={Styles.title}>Select Users to Attach/Detach to {selectedCourse.name}</Title>
+                <FlatList
+                    data={userList}
+                    renderItem={renderUserSelectionItem}
+                    keyExtractor={(item) => item.id}
+                />
+                <View style={Styles.buttonContainer}>
+                    <CustomButton
+                        mode={'contained'}
+                        onPress={() => {
+                            setUserSelectionModalVisible(false)
+                            handleAttachUsersSubmit(selectedCourse.id, attachedUsers).then(r => r);
+                        }}>
+                        Close
+                    </CustomButton>
+                </View>
+            </View>)}
         <Modal
             animationType="slide"
             transparent={true}
@@ -218,25 +237,6 @@ const AdminCreateCourseScreen = ({navigation}) => {
                 </View>
             </View>
         </Modal>
-
-        <Modal
-            visible={userSelectionModalVisible}
-            onRequestClose={() => setUserSelectionModalVisible(false)}>
-            <View style={Styles.userList}>
-                <FlatList
-                    data={userList}
-                    renderItem={renderUserSelectionItem}
-                    keyExtractor={(item) => item.id}
-                />
-                <CustomButton onPress={() => {
-                    setUserSelectionModalVisible(false)
-                    handleAttachUsersSubmit(selectedCourse.id, attachedUsers).then(r => r);
-                }}>
-                    Close
-                </CustomButton>
-            </View>
-        </Modal>
-
 
         <View style={{position: 'absolute', bottom: 0, right: 0}}>
             <FAButton

@@ -17,7 +17,8 @@ const Styles = StyleSheet.create({
         flex: 1, justifyContent: 'center', padding: 20, margin: 10
     }, title: {
         fontSize: 20,
-        textAlign: 'center'
+        textAlign: 'center',
+        marginHorizontal: 20,
     }, buttonContainer: {
         marginTop: 10
     }, screenContainer: {
@@ -62,7 +63,7 @@ const Styles = StyleSheet.create({
     }, modalCard: {
         width: '90%', padding: 10,
     }, cardTitle: {
-        fontSize: 18, fontWeight: 'bold',
+        fontSize: 18, fontWeight: 'bold', justifyContent: 'center', textAlign: 'center',
     }, cardSubtitle: {
         fontSize: 16, color: '#666',
     }, paragraph: {
@@ -112,6 +113,17 @@ const Styles = StyleSheet.create({
             width: 0, height: 2
         }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5
     },
+    userListModalView: {
+        marginTop: 10, // Space from the top
+        marginBottom: 10, // Space from the bottom
+        marginLeft: 10, // Space from the left
+        marginRight: 10, // Space from the right
+        backgroundColor: "white",
+        borderRadius: 20,
+        shadowColor: "#000", shadowOffset: {
+            width: 0, height: 2
+        }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5
+    },
 
     // Add these to your Styles.js or equivalent stylesheet
     cardRow: {
@@ -154,7 +166,71 @@ const Styles = StyleSheet.create({
         flex: 1, padding: 10,
     }, textInput: {
         height: 150, borderColor: 'gray', borderWidth: 1, marginBottom: 10, padding: 10, textAlignVertical: 'top',
-    }
+    },
+    codeAndTimeContainer: {
+        flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    }, attendanceCode: {
+        fontSize: 16, fontWeight: 'bold',
+    }, attendanceTime: {
+        fontStyle: 'italic',
+    },
 });
 
 export default Styles;
+
+export const cameraStyles = StyleSheet.create({
+    overlayContainer: {
+        flex: 1, justifyContent: 'space-between',
+    }, topBar: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingTop: 16,
+        paddingHorizontal: 16,
+    }, instructionContainer: {
+        // have a semi-transparent black background with border radius
+        borderRadius: 20,
+        padding: 10,
+        borderStyle: 'solid',
+        borderWidth: 3,
+        borderColor: 'white',
+        height: '50%',
+        width: '80%',
+        alignSelf: 'center',
+        justifyContent: 'center',
+    }, instructionText: {
+        color: 'white', textAlign: 'center',
+    }, bottomBar: {
+        paddingBottom: 16, paddingHorizontal: 16, alignItems: 'center',
+    }, camera: {
+        flex: 1,
+    }, closeButton: {
+        alignSelf: 'flex-end',
+        alignItems: 'center',
+        backgroundColor: 'transparent',
+        borderRadius: 10,
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderColor: 'white',
+        height: 50,
+        justifyContent: 'center',
+        width: 50,
+    }, closeButtonText: {
+        color: 'white', fontSize: 40,
+    }, modalView: {
+        justifyContent: 'center',
+        position: 'absolute',
+        bottom: '30%',
+        width: '100%',
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0, height: 1
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+});
