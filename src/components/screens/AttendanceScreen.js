@@ -1,48 +1,66 @@
 import React, {useEffect, useState} from 'react';
-import {Modal, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-
-import Styles from "../../constants/styles";
+import {ActivityIndicator, FlatList, Modal, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import Styles, {cameraStyles} from "../../constants/styles";
 import CustomButton from "../common/CustomButton";
 import InputField from "../common/InputField";
 import CustomHeader from "../common/CustomHeader";
 import FAButton from "../common/FAButton";
-import {Title} from "react-native-paper";
+import {Card, Paragraph, Title} from "react-native-paper";
 import {Camera} from 'expo-camera';
 import * as Location from 'expo-location';
+import {getUser} from "../../services/firebase/auth";
+import {
+    createAttendanceRecord,
+    getAttendanceWithModuleByUserId,
+    validateAttendanceCode
+} from "../../services/firebase/attendance";
+import {convertTimestamp} from "../../utils/helpers";
 
 const AttendanceScreen = ({navigation}) => {
     const [attendanceCode, setAttendanceCode] = useState('');
-    const [attendanceRecords, setAttendanceRecords] = useState([{
-        date: '2023-03-01', status: 'Present', course: 'Introduction to Computer Science', code: 'ABC123'
-    }, {date: '2023-03-02', status: 'Absent', course: 'Introduction to Computer Science', code: 'ABC123'},]);
+    const [attendanceRecords, setAttendanceRecords] = useState([]);
 
     const [attendanceModalVisible, setAttendanceModalVisible] = useState(false);
-    const [scanned, setScanned] = useState(false);
-
     // Permissions and Camera States
     const [hasCameraPermission, setHasCameraPermission] = useState(null);
     const [hasLocationPermission, setHasLocationPermission] = useState(null);
     const [type, setType] = useState(Camera.Constants.Type.back);
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
-
+    const [userDetails, setUserDetails] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
     const [isCameraVisible, setIsCameraVisible] = useState(false);
 
     useEffect(() => {
-        (async () => {
-            const cameraResponse = await Camera.requestCameraPermissionsAsync();
-            setHasCameraPermission(cameraResponse.status === 'granted');
+        // Define an async function that we will call immediately
+        const initialize = async () => {
+            try {
+                const userDetails = await getUser();
+                setUserDetails(userDetails);
 
-            const locationResponse = await Location.requestForegroundPermissionsAsync();
-            setHasLocationPermission(locationResponse.status === 'granted');
+                getAttendanceWithModuleByUserId(userDetails.uid).then(r => {
+                    setAttendanceRecords(r);
+                    setIsLoading(false);
+                });
 
-            if (locationResponse.status === 'granted') {
-                let location = await Location.getCurrentPositionAsync({});
-                setLocation(location);
-            } else {
-                setErrorMsg('Permission to access location was denied');
+                const cameraResponse = await Camera.requestCameraPermissionsAsync();
+                setHasCameraPermission(cameraResponse.status === 'granted');
+
+                const locationResponse = await Location.requestForegroundPermissionsAsync();
+                setHasLocationPermission(locationResponse.status === 'granted');
+
+                if (locationResponse.status === 'granted') {
+                    const location = await Location.getCurrentPositionAsync({});
+                    setLocation(location);
+                } else {
+                    setErrorMsg('Permission to access location was denied.');
+                }
+            } catch (error) {
+                console.error('An error occurred during initialization', error);
             }
-        })();
+        };
+
+        initialize().then(r => r);
     }, []);
 
     const handleQRCodeScanner = () => {
@@ -52,6 +70,7 @@ const AttendanceScreen = ({navigation}) => {
     const handleManualCode = () => {
         setAttendanceModalVisible(true);
         setIsCameraVisible(false);
+        setAttendanceCode('');
     }
 
     const CameraOverlay = () => (<View style={cameraStyles.overlayContainer}>
@@ -72,27 +91,84 @@ const AttendanceScreen = ({navigation}) => {
         </View>
     </View>);
 
+    const isAttendanceCodeScanned = (code) => {
+        return attendanceRecords.find(record => record.attendanceCode === code);
+    }
+
     const handleCheckInCode = () => {
-        console.log('Check in with code:', attendanceCode);
-        console.log('Location:', location);
-        // updateAttendanceRecords(attendanceCode, 'Present'); // Assuming 'Present' for demonstration
         setAttendanceModalVisible(false);
+        setIsLoading(true);
+        // check if attendance code is in setAttendanceRecords already
+        if (isAttendanceCodeScanned(attendanceCode)) {
+            setIsLoading(false);
+            alert('Attendance code already scanned');
+            return;
+        }
+
+        // validate attendance code
+        validateAttendanceCode(attendanceCode).then(r => {
+            if (!r) {
+                setIsLoading(false);
+                alert('Invalid attendance code');
+            } else {
+                createAttendanceRecord({
+                    attendanceCode: attendanceCode, location, time: new Date().toISOString(), userId: userDetails.uid
+                }).then(r => {
+                    getAttendanceWithModuleByUserId(userDetails.uid).then(r => {
+                        setAttendanceRecords(r);
+                        setIsLoading(false);
+                    });
+                });
+            }
+        });
     };
 
     const handleBarCodeScanned = ({type, data}) => {
-        setScanned(true);
-        console.log('Scanned data:', data, 'of type:', type);
-        console.log('Location:', location);
-
-        // close the camera immediately after scanning
         setIsCameraVisible(false);
+        setIsLoading(true);
+
+        if (isAttendanceCodeScanned(data)) {
+            setIsLoading(false);
+            alert('Attendance code already scanned');
+            return;
+        }
+
+        // validate attendance code
+        validateAttendanceCode(data).then(r => {
+            if (!r) {
+                setIsLoading(false);
+                alert('Invalid attendance code');
+            } else {
+                createAttendanceRecord({
+                    attendanceCode: data, location, time: new Date().toISOString(), userId: userDetails.uid
+                }).then(r => {
+                    getAttendanceWithModuleByUserId(userDetails.uid).then(r => {
+                        setAttendanceRecords(r);
+                        setIsLoading(false);
+                    });
+                });
+            }
+        });
     };
 
-    const updateAttendanceRecords = (code, status) => {
-        setAttendanceRecords(prevRecords => [...prevRecords, {
-            date: new Date().toISOString().split('T')[0], status, course: 'Your Course Name', code
-        }]);
-    };
+    const renderAttendanceRecord = ({item}) => (<Card style={Styles.card}>
+        <Card.Content>
+            <Title>{item.module.moduleDetails.title}</Title>
+            <Paragraph>By {item.module.moduleDetails.lecturer}</Paragraph>
+            <View style={Styles.codeAndTimeContainer}>
+                <Text style={Styles.attendanceCode}>
+                    Attendance Code: {item.attendanceCode.substring(0, 1)}***{item.attendanceCode.slice(-1)}
+                </Text>
+                <Text style={Styles.attendanceTime}>
+                    Scanned {convertTimestamp(item.time)} ago
+                </Text>
+            </View>
+        </Card.Content>
+    </Card>);
+
+    const renderEmpty = () => (<View style={Styles.emptyCoursesContainer}>
+        <Title>No Attendance Records Found</Title>
+    </View>);
 
     if (hasCameraPermission === null || hasLocationPermission === null) {
         return <Text>Requesting for permissions...</Text>;
@@ -102,8 +178,23 @@ const AttendanceScreen = ({navigation}) => {
         return <Text>No access to camera or location</Text>;
     }
 
+
+    if (isLoading) {
+        return (<View style={Styles.container}>
+            <ActivityIndicator size="large" color="#0000ff"/>
+        </View>);
+    }
+
     return (<SafeAreaView style={Styles.screenContainer}>
         <CustomHeader title="Attendance"/>
+
+        {!isCameraVisible && !attendanceModalVisible && <FlatList
+            data={attendanceRecords}
+            renderItem={renderAttendanceRecord}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={{padding: 5}}
+            ListEmptyComponent={renderEmpty}
+        />}
 
         {isCameraVisible && (<Camera
             style={cameraStyles.camera}
@@ -177,60 +268,3 @@ const AttendanceScreen = ({navigation}) => {
 };
 
 export default AttendanceScreen;
-
-const cameraStyles = StyleSheet.create({
-    overlayContainer: {
-        flex: 1, justifyContent: 'space-between',
-    }, topBar: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingTop: 16,
-        paddingHorizontal: 16,
-    }, instructionContainer: {
-        // have a semi-transparent black background with border radius
-        borderRadius: 20,
-        padding: 10,
-        borderStyle: 'solid',
-        borderWidth: 3,
-        borderColor: 'white',
-        height: '50%',
-        width: '80%',
-        alignSelf: 'center',
-        justifyContent: 'center',
-    }, instructionText: {
-        color: 'white', textAlign: 'center',
-    }, bottomBar: {
-        paddingBottom: 16, paddingHorizontal: 16, alignItems: 'center',
-    }, camera: {
-        flex: 1,
-    }, closeButton: {
-        alignSelf: 'flex-end',
-        alignItems: 'center',
-        backgroundColor: 'transparent',
-        borderRadius: 10,
-        borderStyle: 'solid',
-        borderWidth: 1,
-        borderColor: 'white',
-        height: 50,
-        justifyContent: 'center',
-        width: 50,
-    }, closeButtonText: {
-        color: 'white', fontSize: 40,
-    }, modalView: {
-        justifyContent: 'center',
-        position: 'absolute',
-        bottom: '30%',
-        width: '100%',
-        backgroundColor: "white",
-        borderRadius: 20,
-        padding: 35,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0, height: 1
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5
-    },
-});
