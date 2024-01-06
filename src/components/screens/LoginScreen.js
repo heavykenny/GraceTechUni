@@ -25,8 +25,9 @@ const LoginScreen = ({navigation}) => {
             displayMessage('Please enter both email and password', 'error');
             return;
         }
-        setIsLoading(true);
+
         try {
+            setIsLoading(true);
             const user = await loginWithEmail(email, password);
             const userModel = UserModel.fromJSON(user);
             await dataStorage("userObject", UserModel.toJSON(userModel));
@@ -75,18 +76,20 @@ const LoginScreen = ({navigation}) => {
                 <MessageSnackBar visible={isMessageVisible} onDismiss={() => setIsMessageVisible(false)}
                                  message={message} type={messageType}/>
                 <Text style={Styles.title}>Login</Text>
-                <InputField label="Email" placeholder={'user@example.com'} value={email}
-                            onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address"/>
-                <InputField label="Password" placeholder={'min 6 characters'} value={password}
-                            onChangeText={setPassword} secureTextEntry/>
-                <View style={Styles.buttonContainer}>
-                    <CustomButton icon={'login'} mode="contained" onPress={handleLogin}>Login</CustomButton>
-                    <CustomButton icon={'lock-reset'} mode="text" onPress={() => navigation.navigate('ForgotPassword')}>Forgot
-                        Password?</CustomButton>
-                    <CustomButton icon={'account-plus'} mode="text" onPress={() => navigation.navigate('Register')}>Don't
-                        have
-                        an account? Register</CustomButton>
-                </View>
+
+                    <InputField label="Email" placeholder={'user@example.com'} value={email}
+                                onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address"/>
+                    <InputField label="Password" placeholder={'min 6 characters'} value={password}
+                                onChangeText={setPassword} secureTextEntry/>
+                    <View style={Styles.buttonContainer}>
+                        <CustomButton icon={'login'} mode="contained" onPress={handleLogin}>Login</CustomButton>
+                        <CustomButton icon={'lock-reset'} mode="text" onPress={() => navigation.navigate('ForgotPassword')}>
+                            Forgot Password?
+                        </CustomButton>
+                        <CustomButton icon={'account-plus'} mode="text" onPress={() => navigation.navigate('Register')}>
+                            Don't have an account? Register
+                        </CustomButton>
+                    </View>
             </View>
         </SafeAreaView>);
 };

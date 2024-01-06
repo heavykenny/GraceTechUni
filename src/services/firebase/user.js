@@ -52,6 +52,20 @@ export const getAllUsers = async () => {
     }
 }
 
+export const getAllLecturers = async () => {
+    try {
+        const users = [];
+        const q = query(collection(getFirestoreDB, "UserMD"), where("role", "==", "lecturer"));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            users.push(doc.data());
+        });
+        return users;
+    } catch (error) {
+        throw error;
+    }
+}
+
 export const deleteUser = async (userId) => {
     try {
         const userRef = doc(getFirestoreDB, 'UserMD', userId);
