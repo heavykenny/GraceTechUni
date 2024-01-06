@@ -175,7 +175,7 @@ const AdminCreateCourseScreen = ({navigation}) => {
 
     return (<SafeAreaView style={Styles.screenContainer}>
         <CustomHeader
-            title={'Create Course'}
+            title={'Admin Manage Courses'}
         />
 
         <FlatList

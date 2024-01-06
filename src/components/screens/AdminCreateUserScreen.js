@@ -78,7 +78,7 @@ const AdminCreateUserScreen = () => {
 
     return (
         <SafeAreaView style={Styles.screenContainer}>
-            <CustomHeader title={'Manage Students'}/>
+            <CustomHeader title={'Admin Manage Students'}/>
             <FlatList
                 data={users}
                 renderItem={renderUser}

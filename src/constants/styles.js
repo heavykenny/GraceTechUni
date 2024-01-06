@@ -16,11 +16,10 @@ const Styles = StyleSheet.create({
     container: {
         flex: 1, justifyContent: 'center', padding: 20, margin: 10
     }, title: {
-        // marginTop: 10,
-        fontSize: 20, // marginBottom: 20,
+        fontSize: 20,
         textAlign: 'center'
     }, buttonContainer: {
-        marginTop: 20, marginBottom: 20
+        marginTop: 20
     }, screenContainer: {
         flex: 1,
     }, scrollView: {
@@ -136,7 +135,7 @@ const Styles = StyleSheet.create({
     },
 
     postContainer: {
-        padding: 5, borderWidth: 1, borderColor: 'lightgray',
+        padding: 5, borderWidth: 1, borderColor: 'lightgray', borderRadius: 5, marginVertical: 5,
     }, header: {
         flexDirection: 'row', alignItems: 'center',
     }, userPhoto: {
