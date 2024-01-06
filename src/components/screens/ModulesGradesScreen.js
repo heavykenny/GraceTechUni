@@ -1,17 +1,17 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {FlatList, SafeAreaView, StyleSheet, View} from 'react-native';
 import {List} from 'react-native-paper';
 import Styles from "../../constants/styles";
 import CustomHeader from "../common/CustomHeader";
+import {fixedModules} from "../../services/firebase/module";
+import {getUser} from "../../services/firebase/auth";
+import {getAttendanceByUserId} from "../../services/firebase/attendance";
 
 const ModulesGradesScreen = ({navigation}) => {
-    const modules = [{
-        id: 1, moduleName: 'Introduction to Computer Science', credits: 10, lecturer: 'John Doe', grade: 'A'
-    }, {id: 2, moduleName: 'Advanced Mathematics', credits: 10, lecturer: 'Jane Doe', grade: 'B'}, {
-        id: 3, moduleName: 'Introduction to Psychology', grade: 'A', credits: 4, lecturer: 'Dr. Smith'
-    }, {id: 4, moduleName: 'Advanced Mathematics', grade: 'B+', credits: 3, lecturer: 'Prof. Johnson'},];
+    const modules = fixedModules.slice(0, 5);
+
     const renderItem = ({item}) => (<List.Accordion
-            title={item.moduleName}
+            title={item.title}
             left={props => <List.Icon {...props} icon="book-outline"/>}>
             <View style={styles.content}>
                 <List.Item title={'Grade: ' + item.grade}/>
@@ -31,7 +31,6 @@ const ModulesGradesScreen = ({navigation}) => {
             title="Modules & Grades"
             showBackButton={true}
             onBackPress={() => navigation.goBack()}
-
         />}
         <View style={Styles.scrollView}>
             <FlatList
