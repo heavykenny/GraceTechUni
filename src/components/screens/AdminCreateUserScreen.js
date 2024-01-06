@@ -76,6 +76,12 @@ const AdminCreateUserScreen = () => {
         </Card>
     );
 
+    const renderEmpty = () => (
+        <View style={Styles.emptyCoursesContainer}>
+            <Title>No Users Found</Title>
+        </View>
+    );
+
     return (
         <SafeAreaView style={Styles.screenContainer}>
             <CustomHeader title={'Admin Manage Students'}/>
@@ -84,6 +90,7 @@ const AdminCreateUserScreen = () => {
                 renderItem={renderUser}
                 keyExtractor={(item) => item.uid}
                 contentContainerStyle={{padding: 5}}
+                ListEmptyComponent={renderEmpty}
             />
             <Modal
                 animationType="slide"
