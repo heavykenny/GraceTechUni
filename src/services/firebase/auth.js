@@ -127,3 +127,31 @@ const getUserDetailsByUID = async (uid) => {
     }
 };
 
+// this is used only by the admin to create a new user, without the need for a password
+export const createUserWithEmailOnly = async (userData) => {
+    try {
+        const randomPassword = Math.random().toString(36).slice(-8);
+        const userCredential = await createUserWithEmailAndPassword(auth, userData.email, randomPassword);
+        const user = userCredential.user;
+
+        // Add additional user data to Firestore
+        const additionalData = {
+            email: userData.email,
+            uid: user.uid,
+            studentId: generateStudentId(),
+            phoneNumber: userData.phoneNumber,
+            displayName: userData.displayName,
+            photoURL: 'https://i.imgur.com/7k12EPD.png',
+            role: userData.role,
+            courseUid: '',
+            createdAt: new Date(),
+            updatedAt: new Date()
+        };
+        await setDoc(doc(getFirestoreDB, 'UserMD', user.uid), additionalData);
+        // send reset password email to user
+        await sendPasswordResetEmail(auth, userData.email);
+        return user;
+    } catch (error) {
+        throw error;
+    }
+}

@@ -41,6 +41,20 @@ export const getUserDetails = async (userId) => {
 export const getAllUsers = async () => {
     try {
         const users = [];
+        const q = query(collection(getFirestoreDB, "UserMD"));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            users.push(doc.data());
+        });
+        return users;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const getAllStudents = async () => {
+    try {
+        const users = [];
         const q = query(collection(getFirestoreDB, "UserMD"), where("role", "==", "student"));
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {

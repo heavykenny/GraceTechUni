@@ -7,7 +7,7 @@ import FAButton from "../common/FAButton";
 import Styles from "../../constants/styles";
 import {createNewCourse, deleteCourse, getAllCourses, updateCourse} from "../../services/firebase/course";
 import CustomHeader from "../common/CustomHeader";
-import {attachedCourseToUsers, detachCourseFromUser, getAllUsers} from "../../services/firebase/user";
+import {attachedCourseToUsers, detachCourseFromUser, getAllStudents} from "../../services/firebase/user";
 
 const AdminCreateCourseScreen = ({navigation}) => {
     // State initializations
@@ -33,7 +33,7 @@ const AdminCreateCourseScreen = ({navigation}) => {
             try {
                 const coursesData = await getAllCourses();
                 setCourses(coursesData);
-                const usersData = await getAllUsers();
+                const usersData = await getAllStudents();
                 setUserList(usersData);
             } catch (error) {
                 console.error("Error loading data: ", error);
@@ -53,7 +53,7 @@ const AdminCreateCourseScreen = ({navigation}) => {
             if (currentAttachedUsers.includes(user.uid)) {
                 // Detach user
                 detachCourseFromUser(user.uid).then(r => {
-                    getAllUsers().then(setUserList);
+                    getAllStudents().then(setUserList);
                 });
                 return currentAttachedUsers.filter((uid) => uid !== user.uid);
             } else {
@@ -66,7 +66,7 @@ const AdminCreateCourseScreen = ({navigation}) => {
     const handleAttachUsersSubmit = async (courseId, users) => {
         try {
             await attachedCourseToUsers(courseId, users);
-            getAllUsers().then(setUserList);
+            getAllStudents().then(setUserList);
         } catch (error) {
             console.error("Failed to attach users to course: ", error);
         }
@@ -187,23 +187,23 @@ const AdminCreateCourseScreen = ({navigation}) => {
             ListEmptyComponent={renderEmptyCourses}
         />)}
         {userSelectionModalVisible && (<View>
-                <Title style={Styles.title}>Select Users to Attach/Detach to {selectedCourse.name}</Title>
-                <FlatList
-                    data={userList}
-                    renderItem={renderUserSelectionItem}
-                    keyExtractor={(item) => item.id}
-                />
-                <View style={Styles.buttonContainer}>
-                    <CustomButton
-                        mode={'contained'}
-                        onPress={() => {
-                            setUserSelectionModalVisible(false)
-                            handleAttachUsersSubmit(selectedCourse.id, attachedUsers).then(r => r);
-                        }}>
-                        Close
-                    </CustomButton>
-                </View>
-            </View>)}
+            <Title style={Styles.title}>Select Users to Attach/Detach to {selectedCourse.name}</Title>
+            <FlatList
+                data={userList}
+                renderItem={renderUserSelectionItem}
+                keyExtractor={(item) => item.id}
+            />
+            <View style={Styles.buttonContainer}>
+                <CustomButton
+                    mode={'contained'}
+                    onPress={() => {
+                        setUserSelectionModalVisible(false)
+                        handleAttachUsersSubmit(selectedCourse.id, attachedUsers).then(r => r);
+                    }}>
+                    Close
+                </CustomButton>
+            </View>
+        </View>)}
         <Modal
             animationType="slide"
             transparent={true}
