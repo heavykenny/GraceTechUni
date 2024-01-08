@@ -5,6 +5,7 @@ import QRCode from 'react-native-qrcode-svg';
 import Styles from "../../constants/styles";
 import CustomHeader from "../common/CustomHeader";
 import {createAttendanceCode, fixedModules} from "../../services/firebase/module";
+import userModel from "../../models/UserModel";
 
 const ModulesScreen = ({navigation}) => {
     const [modalVisible, setModalVisible] = useState(false);
@@ -61,7 +62,7 @@ const ModulesScreen = ({navigation}) => {
 
     return (<SafeAreaView style={Styles.screenContainer}>
         <CustomHeader
-            title="Admin Modules Attendance"
+            title={userModel.role === 'admin' ? 'Admin Modules' : 'Lecturer Modules'}
         />
         <FlatList
             data={fixedModules}

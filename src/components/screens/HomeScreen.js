@@ -17,12 +17,14 @@ const HomeScreen = ({navigation}) => {
     const [isMessageVisible, setIsMessageVisible] = useState(false);
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('');
+    const [userModel, setUserModel] = useState(UserModel.fromJSON({}));
 
     const fetchUserData = useCallback(async () => {
         try {
             const user = await getUser();
             if (user) {
                 const userData = UserModel.fromJSON(user);
+                setUserModel(userData);
                 if (userData.courseUid) {
                     const courseDetails = await getCourseDetails(userData.courseUid);
                     setSelectedCourse(courseDetails);
@@ -71,32 +73,33 @@ const HomeScreen = ({navigation}) => {
                 <Card.Content>
                     <Title>Welcome to GraceTech University</Title>
                     <Paragraph>Stay updated with your academic information.</Paragraph>
+                    <Paragraph style={{fontStyle: 'italic'}}>You are logged in as a {userModel.role}</Paragraph>
                 </Card.Content>
             </Card>
 
             {/* Quick Access Section */}
             <Title style={Styles.sectionTitle}>Quick Access</Title>
-            <Card style={Styles.card} onPress={openModal}>
-                <Card.Content>
-                    <MaterialCommunityIcons name="school" size={24} style={Styles.icon}/>
-                    <Title>Course Details</Title>
-                    <Paragraph>View your course details</Paragraph>
-                </Card.Content>
-            </Card>
-            <View>
+            {userModel.role === 'student' && (<Card style={Styles.card} onPress={openModal}>
+                    <Card.Content>
+                        <MaterialCommunityIcons name="school" size={24} style={Styles.icon}/>
+                        <Title>Course Details</Title>
+                        <Paragraph>View your course details</Paragraph>
+                    </Card.Content>
+                </Card>)}
+            {userModel.role === 'student' && (<View>
                 <CourseDetailsScreen
                     visible={isModalVisible}
                     hideModal={() => setIsModalVisible(false)}
                     courseDetails={selectedCourse}
                 />
-            </View>
-            <Card style={Styles.card} onPress={() => navigation.navigate('Modules')}>
+            </View>)}
+            {userModel.role === 'student' && (<Card style={Styles.card} onPress={() => navigation.navigate('Modules')}>
                 <Card.Content>
                     <MaterialCommunityIcons name="book" size={24} style={Styles.icon}/>
                     <Title>Modules</Title>
                     <Paragraph>View your modules and grades</Paragraph>
                 </Card.Content>
-            </Card>
+            </Card>)}
             <Card style={Styles.card} onPress={() => navigation.navigate('GlobalTimeline')}>
                 <Card.Content>
                     <MaterialCommunityIcons name="account-group" size={24} style={Styles.icon}/>
@@ -104,21 +107,22 @@ const HomeScreen = ({navigation}) => {
                     <Paragraph>Connect with your classmates</Paragraph>
                 </Card.Content>
             </Card>
-            <Card style={Styles.card} onPress={() => navigation.navigate('Attendance Record')}>
-                <Card.Content>
-                    <MaterialCommunityIcons name="calendar-check" size={24} style={Styles.icon}/>
-                    <Title>Attendance</Title>
-                    <Paragraph>View your attendance record</Paragraph>
-                </Card.Content>
-            </Card>
+            {userModel.role === 'student' && (
+                <Card style={Styles.card} onPress={() => navigation.navigate('Attendance Record')}>
+                    <Card.Content>
+                        <MaterialCommunityIcons name="calendar-check" size={24} style={Styles.icon}/>
+                        <Title>Attendance</Title>
+                        <Paragraph>View your attendance record</Paragraph>
+                    </Card.Content>
+                </Card>)}
 
             {/* Notifications Section */}
-            <Title style={Styles.sectionTitle}>Notifications</Title>
-            <Card style={Styles.card}>
-                <Card.Content>
-                    <Paragraph>New assignment in Advanced Mathematics due next week</Paragraph>
-                </Card.Content>
-            </Card>
+            {/*<Title style={Styles.sectionTitle}>Notifications</Title>*/}
+            {/*<Card style={Styles.card}>*/}
+            {/*    <Card.Content>*/}
+            {/*        <Paragraph>New assignment in Advanced Mathematics due next week</Paragraph>*/}
+            {/*    </Card.Content>*/}
+            {/*</Card>*/}
 
         </ScrollView>
     </SafeAreaView>);
