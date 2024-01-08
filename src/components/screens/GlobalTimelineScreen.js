@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, SafeAreaView, TouchableOpacity, View, StyleSheet, Image} from 'react-native';
-import {Appbar, Card, Divider, Modal, Paragraph, Portal, Text, Avatar} from 'react-native-paper';
+import {FlatList, SafeAreaView, TouchableOpacity, View} from 'react-native';
+import {Appbar, Card, Divider, Modal, Portal, Text} from 'react-native-paper';
 import Styles from "../../constants/styles";
 import FAButton from "../common/FAButton";
 import {getAllCourses} from "../../services/firebase/course";
 import {getGlobalTimelineData} from "../../services/firebase/post";
 import {getAllUsers} from "../../services/firebase/user";
-import {convertTimestamp} from "../../utils/helpers";
 import {useFocusEffect} from "@react-navigation/native";
 import PostComponent from "../common/PostComponent";
 
@@ -55,9 +54,7 @@ const GlobalTimelineScreen = ({navigation}) => {
     </View>);
 
     // Render global posts
-    const renderPost = ({item}) => (
-        <PostComponent item={item} user={filterUser(item.userUid)}/>
-    );
+    const renderPost = ({item}) => (<PostComponent item={item} user={filterUser(item.userUid)}/>);
 
     // Render courses for top navigation
     const renderCourseTab = (courseId, index) => (<View key={index}>
@@ -82,13 +79,6 @@ const GlobalTimelineScreen = ({navigation}) => {
                 </TouchableOpacity>
             </View>
 
-            <FlatList
-                data={posts}
-                renderItem={renderPost}
-                keyExtractor={item => item.id}
-                ListEmptyComponent={renderEmptyPosts}
-            />
-
 
             <Portal>
                 <Modal visible={visible} onDismiss={() => setVisible(false)}
@@ -105,7 +95,13 @@ const GlobalTimelineScreen = ({navigation}) => {
                 </Modal>
             </Portal>
         </View>
-
+        <FlatList
+            style={Styles.scrollView}
+            data={posts}
+            renderItem={renderPost}
+            keyExtractor={(item) => item.id}
+            ListEmptyComponent={renderEmptyPosts}
+        />
         <View style={{position: 'absolute', bottom: 0, right: 0}}>
             <FAButton
                 onPress={() => navigation.navigate('CreatePost', {context: 'global'})}

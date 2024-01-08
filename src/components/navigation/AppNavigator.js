@@ -32,6 +32,13 @@ const AppNavigator = () => {
         { key: 'admin_profile', title: 'Profile', focusedIcon: 'account', unfocusedIcon: 'account-outline' },
     ];
 
+
+    const lecturerRoutes = [
+        { key: 'home', title: 'Home', focusedIcon: 'home', unfocusedIcon: 'home-outline' },
+        { key: 'lecturer_modules', title: 'Modules', focusedIcon: 'book', unfocusedIcon: 'book-outline' },
+        { key: 'lecturer_profile', title: 'Profile', focusedIcon: 'account', unfocusedIcon: 'account-outline' },
+    ];
+
     const [routes, setRoutes] = useState(userRoutes);
 
     useEffect(() => {
@@ -40,7 +47,13 @@ const AppNavigator = () => {
                 setIsLoading(true);
                 const user = await getUser();
                 setUser(user);
-                setRoutes(user.role === 'admin' ? adminRoutes : userRoutes)
+                if (user.role === 'admin') {
+                    setRoutes(adminRoutes);
+                } else if (user.role === 'lecturer') {
+                    setRoutes(lecturerRoutes);
+                } else {
+                    setRoutes(userRoutes);
+                }
             } catch (error) {
                 console.error('Error retrieving user data:', error);
             } finally {
@@ -67,6 +80,8 @@ const AppNavigator = () => {
         admin_lecturer: AdminCreateLecturerScreen,
         admin_manage: ModulesScreen,
         admin_profile: ProfileScreen,
+        lecturer_modules: ModulesScreen,
+        lecturer_profile: ProfileScreen,
     });
 
     if (isLoading) return (<View style={Styles.container}>

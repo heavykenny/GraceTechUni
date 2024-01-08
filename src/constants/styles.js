@@ -155,7 +155,7 @@ const Styles = StyleSheet.create({
     }, postUserName: {
         fontWeight: 'bold', marginRight: 4, color: 'grey',
     }, userRole: {
-        marginRight: 4, fontStyle: 'italic',
+        marginRight: 4, fontStyle: 'italic', borderStyle: 'solid', borderWidth: 1, borderColor: 'grey', borderRadius: 10, fontSize: 8, padding: 4,
     }, content: {
         padding: 4, marginVertical: 4,
     }, dateContainer: {
