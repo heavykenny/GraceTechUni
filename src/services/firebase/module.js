@@ -148,7 +148,7 @@ export const createAttendanceCode = async (moduleId, code, expiration, currentMo
         const moduleRef = await addDoc(collection(getFirestoreDB, "ModuleMD"), {
             attendanceCode: code, attendanceCodeExpiration: expiration, moduleId: moduleId, moduleDetails: currentModule
         });
-        await setDoc(moduleRef, {id: moduleRef.id}, {merge: true});
+        await setDoc(moduleRef, {id: moduleRef.id, createdAt: new Date()}, {merge: true});
         return moduleRef.id;
     } catch (error) {
         throw error;

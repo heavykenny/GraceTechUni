@@ -11,6 +11,7 @@ import Styles from "../../constants/styles";
 import ModulesGradesScreen from "../screens/ModulesGradesScreen";
 import AdminCreateLecturerScreen from "../screens/AdminCreateLecturerScreen";
 import {ActivityIndicator, View} from "react-native";
+import LecturerAttendanceScreen from "../screens/LecturerAttendanceScreen";
 
 const AppNavigator = () => {
     const [index, setIndex] = useState(0);
@@ -18,56 +19,34 @@ const AppNavigator = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     const userRoutes = [{
-        key: 'home',
-        title: 'Home',
-        focusedIcon: 'home',
-        unfocusedIcon: 'home-outline'
+        key: 'home', title: 'Home', focusedIcon: 'home', unfocusedIcon: 'home-outline'
     }, {
-        key: 'attendance',
-        title: 'Attendance',
-        focusedIcon: 'calendar-check',
-        unfocusedIcon: 'calendar-check-outline'
+        key: 'attendance', title: 'Attendance', focusedIcon: 'calendar-check', unfocusedIcon: 'calendar-check-outline'
     }, {key: 'modules', title: 'Modules', focusedIcon: 'book', unfocusedIcon: 'book-outline'}, {
-        key: 'profile',
-        title: 'Profile',
-        focusedIcon: 'account',
-        unfocusedIcon: 'account-outline'
+        key: 'profile', title: 'Profile', focusedIcon: 'account', unfocusedIcon: 'account-outline'
     },];
 
     const adminRoutes = [{
-        key: 'admin_course',
-        title: 'Course',
-        focusedIcon: 'book-plus',
-        unfocusedIcon: 'book-plus-outline'
+        key: 'admin_course', title: 'Course', focusedIcon: 'book-plus', unfocusedIcon: 'book-plus-outline'
     }, {
-        key: 'admin_users',
-        title: 'Students',
-        focusedIcon: 'account-group',
-        unfocusedIcon: 'account-group-outline'
+        key: 'admin_users', title: 'Students', focusedIcon: 'account-group', unfocusedIcon: 'account-group-outline'
     }, {
-        key: 'admin_lecturer',
-        title: 'Lecturer',
-        focusedIcon: 'account-tie',
-        unfocusedIcon: 'account-tie-outline'
+        key: 'admin_lecturer', title: 'Lecturer', focusedIcon: 'account-tie', unfocusedIcon: 'account-tie-outline'
     }, {
-        key: 'admin_manage',
-        title: 'Attendance',
-        focusedIcon: 'account-cog',
-        unfocusedIcon: 'account-cog-outline'
+        key: 'admin_manage', title: 'Attendance', focusedIcon: 'account-cog', unfocusedIcon: 'account-cog-outline'
     }, {key: 'admin_profile', title: 'Profile', focusedIcon: 'account', unfocusedIcon: 'account-outline'},];
 
 
     const lecturerRoutes = [{
-        key: 'home',
-        title: 'Home',
-        focusedIcon: 'home',
-        unfocusedIcon: 'home-outline'
+        key: 'home', title: 'Home', focusedIcon: 'home', unfocusedIcon: 'home-outline'
     }, {
-        key: 'lecturer_modules',
-        title: 'Modules',
-        focusedIcon: 'book',
-        unfocusedIcon: 'book-outline'
-    }, {key: 'lecturer_profile', title: 'Profile', focusedIcon: 'account', unfocusedIcon: 'account-outline'},];
+        key: 'lecturer_attendance',
+        title: 'Attendance',
+        focusedIcon: 'account-cog',
+        unfocusedIcon: 'account-cog-outline'
+    },{
+        key: 'lecturer_modules', title: 'Modules', focusedIcon: 'book', unfocusedIcon: 'book-outline'
+    }, {key: 'lecturer_profile', title: 'Profile', focusedIcon: 'account', unfocusedIcon: 'account-outline'}];
 
     const [routes, setRoutes] = useState(userRoutes);
 
@@ -77,6 +56,7 @@ const AppNavigator = () => {
                 setIsLoading(true);
                 const user = await getUser();
                 setUser(user);
+                setRoutes(user.role === 'admin' ? adminRoutes : userRoutes);
                 if (user.role === 'admin') {
                     setRoutes(adminRoutes);
                 } else if (user.role === 'lecturer') {
@@ -95,11 +75,6 @@ const AppNavigator = () => {
 
     const handleIndexChange = (newIndex) => setIndex(newIndex);
 
-
-    useEffect(() => {
-        setRoutes(user.role === 'admin' ? adminRoutes : userRoutes);
-    }, [user.role]);
-
     const renderScene = BottomNavigation.SceneMap({
         home: StackNavigator,
         profile: ProfileScreen,
@@ -110,6 +85,7 @@ const AppNavigator = () => {
         admin_lecturer: AdminCreateLecturerScreen,
         admin_manage: ModulesScreen,
         admin_profile: ProfileScreen,
+        lecturer_attendance: LecturerAttendanceScreen,
         lecturer_modules: ModulesScreen,
         lecturer_profile: ProfileScreen,
     });
@@ -119,10 +95,10 @@ const AppNavigator = () => {
     </View>);
 
     return (<BottomNavigation
-            navigationState={{index, routes}}
-            onIndexChange={handleIndexChange}
-            renderScene={renderScene}
-        />);
+        navigationState={{index, routes}}
+        onIndexChange={handleIndexChange}
+        renderScene={renderScene}
+    />);
 };
 
 export default AppNavigator;

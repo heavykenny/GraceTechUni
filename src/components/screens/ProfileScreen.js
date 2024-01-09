@@ -27,18 +27,13 @@ const ProfileScreen = ({navigation}) => {
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('');
 
-
     const handleLogout = async () => {
         // Implement the logout functionality here
-        dataRemove('userObject').then(
-            () => {
-                console.log('User logged out successfully');
-                logout();
-            },
-            (error) => {
-                console.log('Error logging out user:', error);
-            }
-        );
+        dataRemove('userObject').then(() => {
+            logout();
+        }, (error) => {
+            console.log('Error logging out user:', error);
+        });
     };
 
     useEffect(() => {
@@ -55,7 +50,7 @@ const ProfileScreen = ({navigation}) => {
                 console.log('Error retrieving user data:', error);
             }
         };
-        fetchUserData().then(r => console.log('User data fetched successfully'));
+        fetchUserData().then(r => r);
     }, []);
 
     const handleEditProfile = () => {
@@ -66,19 +61,16 @@ const ProfileScreen = ({navigation}) => {
     const handleUpdate = async () => {
         setIsLoading(true);
         const updatedInfo = {
-            ...userModel,
-            updatedAt: new Date()
+            ...userModel, updatedAt: new Date()
         };
 
         try {
-            updateUserProfile(updatedInfo).then(
-                () => {
-                    setOriginalStudentInfo(updatedInfo);
-                    updateUserDetails(updatedInfo);
-                    setEditModalVisible(false);
-                    setIsLoading(false);
-                }
-            )
+            updateUserProfile(updatedInfo).then(() => {
+                setOriginalStudentInfo(updatedInfo);
+                updateUserDetails(updatedInfo);
+                setEditModalVisible(false);
+                setIsLoading(false);
+            })
             setMessage('Profile updated successfully');
             setMessageType('success');
             setIsMessageVisible(true);
@@ -93,10 +85,7 @@ const ProfileScreen = ({navigation}) => {
 
     const onImageSelect = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaType: 'photo',
-            allowsEditing: true,
-            aspect: [1, 1],
-            quality: 1,
+            mediaType: 'photo', allowsEditing: true, aspect: [1, 1], quality: 1,
         });
 
         if (result.assets && result.assets.length > 0) {
@@ -109,14 +98,12 @@ const ProfileScreen = ({navigation}) => {
                 setUserModel(updatedUserModel);
                 await dataStorage("userObject", UserModel.toJSON(updatedUserModel));
                 updateUserDetails(updatedUserModel);
-                console.log('User profile image updated successfully');
                 setEditModalVisible(false)
 
                 setMessage('Profile image updated successfully');
                 setMessageType('success');
                 setIsMessageVisible(true);
             } catch (error) {
-                console.error("Error uploading image:", error);
                 setMessage('Error uploading image');
                 setMessageType('error');
                 setIsMessageVisible(true);
@@ -126,114 +113,107 @@ const ProfileScreen = ({navigation}) => {
 
     const handleNameChange = (text) => {
         setUserModel(prevModel => ({
-            ...prevModel,
-            displayName: text
+            ...prevModel, displayName: text
         }));
     };
 
     const handlePhoneNumberChange = (text) => {
         setUserModel(prevModel => ({
-            ...prevModel,
-            phoneNumber: text
+            ...prevModel, phoneNumber: text
         }));
     };
 
-
     if (isLoading) {
-        return (
-            <View style={Styles.container}>
-                <ActivityIndicator size="large" color="#0000ff"/>
-            </View>
-        );
+        return (<View style={Styles.container}>
+            <ActivityIndicator size="large" color="#0000ff"/>
+        </View>);
     }
 
-    return (
-        <SafeAreaView style={Styles.screenContainer}>
-            <CustomHeader
-                title="Profile"
-            />
-            <KeyboardAwareScrollView style={Styles.scrollView}>
-                <View style={Styles.profileHeader}>
-                    <Avatar.Image size={100} source={{uri: originalStudentInfo.photoURL}} style={Styles.avatar}/>
-                    <Title style={Styles.name}>{originalStudentInfo.displayName}</Title>
-                    <Paragraph style={Styles.studentId}>{originalStudentInfo.studentId}</Paragraph>
-                </View>
+    return (<SafeAreaView style={Styles.screenContainer}>
+        <CustomHeader
+            title="Profile"
+        />
+        <KeyboardAwareScrollView style={Styles.scrollView}>
+            <View style={Styles.profileHeader}>
+                <Avatar.Image size={100} source={{uri: originalStudentInfo.photoURL}} style={Styles.avatar}/>
+                <Title style={Styles.name}>{originalStudentInfo.displayName}</Title>
+                <Paragraph style={Styles.studentId}>{originalStudentInfo.studentId}</Paragraph>
+            </View>
 
-                <Card style={Styles.card}>
-                    <Title style={Styles.title}>Contact Information</Title>
-                    <Card.Content>
-                        {/* Email Field */}
-                        <View style={Styles.cardRow}>
-                            <MaterialCommunityIcons name="email" size={20} style={Styles.cardIcon}/>
-                            <Paragraph style={Styles.cardText}>Email: {originalStudentInfo.email}</Paragraph>
-                        </View>
+            <Card style={Styles.card}>
+                <Title style={Styles.title}>Contact Information</Title>
+                <Card.Content>
+                    {/* Email Field */}
+                    <View style={Styles.cardRow}>
+                        <MaterialCommunityIcons name="email" size={20} style={Styles.cardIcon}/>
+                        <Paragraph style={Styles.cardText}>Email: {originalStudentInfo.email}</Paragraph>
+                    </View>
 
-                        {/* Phone Number Field */}
-                        <View style={Styles.cardRow}>
-                            <MaterialCommunityIcons name="phone" size={20} style={Styles.cardIcon}/>
-                            <Paragraph style={Styles.cardText}>Phone: {originalStudentInfo.phoneNumber}</Paragraph>
-                        </View>
-                    </Card.Content>
-                </Card>
+                    {/* Phone Number Field */}
+                    <View style={Styles.cardRow}>
+                        <MaterialCommunityIcons name="phone" size={20} style={Styles.cardIcon}/>
+                        <Paragraph style={Styles.cardText}>Phone: {originalStudentInfo.phoneNumber}</Paragraph>
+                    </View>
+                </Card.Content>
+            </Card>
 
-                <CustomButton icon="account-edit" mode="outlined" onPress={handleEditProfile} style={Styles.button}>
-                    Edit Profile
+            <CustomButton icon="account-edit" mode="outlined" onPress={handleEditProfile} style={Styles.button}>
+                Edit Profile
+            </CustomButton>
+
+            {/* Edit Profile Modal */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={editModalVisible}
+                onRequestClose={() => {
+                    setEditModalVisible(!editModalVisible);
+                }}
+            >
+                <KeyboardAwareScrollView style={Styles.modalView}>
+                    <Title style={Styles.title}>Edit Profile</Title>
+                    <View style={Styles.profileHeader}>
+                        <TouchableOpacity onPress={onImageSelect} style={Styles.avatarContainer}>
+                            <Avatar.Image size={100} source={{uri: originalStudentInfo.photoURL}}
+                                          style={Styles.avatar}/>
+                            <View style={Styles.editIcon}>
+                                <MaterialCommunityIcons name="pencil" size={24} color="black"/>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    <InputField label={'Email'} value={originalStudentInfo.email} disabled={true}/>
+                    <InputField label={'Student ID'} value={originalStudentInfo.studentId + ""} disabled={true}/>
+                    <InputField label={'Name'} value={userModel.displayName}
+                                onChangeText={handleNameChange}/>
+
+                    <InputField label={'Phone Number'}
+                                value={userModel.phoneNumber}
+                                keyboardType={'phone-pad'}
+                                onChangeText={handlePhoneNumberChange}
+                                maxLength={13}/>
+
+                    <View style={Styles.buttonContainer}>
+                        <CustomButton onPress={() => setEditModalVisible(false)} icon={'close'}
+                                      mode={'outlined'}>Cancel</CustomButton>
+                        <CustomButton onPress={handleUpdate} icon={'account-edit'}
+                                      mode={'contained'}>Update</CustomButton>
+                    </View>
+                </KeyboardAwareScrollView>
+            </Modal>
+
+            <View style={Styles.buttonContainer}>
+                <CustomButton icon="logout" mode="contained" onPress={handleLogout}>
+                    Logout
                 </CustomButton>
-
-                {/* Edit Profile Modal */}
-                <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={editModalVisible}
-                    onRequestClose={() => {
-                        setEditModalVisible(!editModalVisible);
-                    }}
-                >
-                    <KeyboardAwareScrollView style={Styles.modalView}>
-                        <Title style={Styles.title}>Edit Profile</Title>
-                        <View style={Styles.profileHeader}>
-                            <TouchableOpacity onPress={onImageSelect} style={Styles.avatarContainer}>
-                                <Avatar.Image size={100} source={{uri: originalStudentInfo.photoURL}}
-                                              style={Styles.avatar}/>
-                                <View style={Styles.editIcon}>
-                                    <MaterialCommunityIcons name="pencil" size={24} color="black"/>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                        <InputField label={'Email'} value={originalStudentInfo.email} disabled={true}/>
-                        <InputField label={'Student ID'} value={originalStudentInfo.studentId + ""} disabled={true}/>
-                        <InputField label={'Name'} value={userModel.displayName}
-                                    onChangeText={handleNameChange}/>
-
-                        <InputField label={'Phone Number'}
-                                    value={userModel.phoneNumber}
-                                    keyboardType={'phone-pad'}
-                                    onChangeText={handlePhoneNumberChange}
-                                    maxLength={13}/>
-
-                        <View style={Styles.buttonContainer}>
-                            <CustomButton onPress={() => setEditModalVisible(false)} icon={'close'}
-                                          mode={'outlined'}>Cancel</CustomButton>
-                            <CustomButton onPress={handleUpdate} icon={'account-edit'} mode={'contained'}>Update</CustomButton>
-                        </View>
-                    </KeyboardAwareScrollView>
-                </Modal>
-
-
-                <View style={Styles.buttonContainer}>
-                    <CustomButton icon="logout" mode="contained" onPress={handleLogout}>
-                        Logout
-                    </CustomButton>
-                </View>
-            </KeyboardAwareScrollView>
-            <MessageSnackBar
-                visible={isMessageVisible}
-                onDismiss={() => setIsMessageVisible(false)}
-                message={message}
-                type={messageType}
-            />
-        </SafeAreaView>
-    );
+            </View>
+        </KeyboardAwareScrollView>
+        <MessageSnackBar
+            visible={isMessageVisible}
+            onDismiss={() => setIsMessageVisible(false)}
+            message={message}
+            type={messageType}
+        />
+    </SafeAreaView>);
 };
 
 export default ProfileScreen;
