@@ -112,7 +112,7 @@ const HomeScreen = ({navigation}) => {
                 </Card.Content>
             </Card>
             {userModel.role === 'student' && (
-                <Card style={Styles.card} onPress={() => navigation.navigate('Attendance Record')}>
+                <Card style={Styles.card} onPress={() => navigation.navigate('Attendance')}>
                     <Card.Content>
                         <MaterialCommunityIcons name="calendar-check" size={24} style={Styles.icon}/>
                         <Title>Attendance</Title>

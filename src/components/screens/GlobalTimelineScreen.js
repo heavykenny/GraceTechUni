@@ -96,6 +96,7 @@ const GlobalTimelineScreen = ({navigation}) => {
             </Portal>
         </View>
         <FlatList
+            showsVerticalScrollIndicator={false}
             style={Styles.scrollView}
             data={posts}
             renderItem={renderPost}

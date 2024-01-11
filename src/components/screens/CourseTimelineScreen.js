@@ -52,6 +52,7 @@ const CourseTimelineScreen = ({navigation, route}) => {
             </Appbar.Header>
         </View>
         <FlatList
+            showsVerticalScrollIndicator={false}
             style={Styles.scrollView}
             data={posts}
             renderItem={renderPost}

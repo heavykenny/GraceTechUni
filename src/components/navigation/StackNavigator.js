@@ -7,6 +7,7 @@ import CreatePostScreen from "../screens/CreatePostScreen";
 import GlobalTimelineScreen from "../screens/GlobalTimelineScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import AdminCreateCourseScreen from "../screens/AdminCreateCourseScreen";
+import AttendanceScreen from "../screens/AttendanceScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +21,7 @@ const StackNavigator = () => {
             <Stack.Screen name="CreatePost" component={CreatePostScreen}/>
             <Stack.Screen name="Profile" component={ProfileScreen}/>
             <Stack.Screen name="AdminCreateCourse" component={AdminCreateCourseScreen}/>
+            <Stack.Screen name="Attendance" component={AttendanceScreen}/>
         </Stack.Navigator>
     );
 };
