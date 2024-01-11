@@ -9,7 +9,7 @@ import AppNavigator from "./src/components/navigation/AppNavigator";
 const AppContainer = () => {
     const {isAuthenticated} = useAuth();
     const theme = {
-        ...DefaultTheme, // Customize your theme here
+        ...DefaultTheme,
     };
     return (<PaperProvider theme={theme}>
             <NavigationContainer>

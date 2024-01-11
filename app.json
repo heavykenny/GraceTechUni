@@ -1,15 +1,15 @@
 {
   "expo": {
     "name": "GraceTechUni",
-    "slug": "GraceTechUni",
+    "slug": "gracetechuni",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icons/icon.png",
+    "icon": "./assets/images/UniMoon-logos_black.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/UniMoon-logos.jpeg",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#0D67B5"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -20,12 +20,19 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icons/adaptive-icon.png",
+        "foregroundImage": "./assets/images/UniMoon-logos_black.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.GraceTechUni"
     },
     "web": {
       "favicon": "./assets/icons/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "1e7895c2-e6cc-4f0d-a85b-093fd88670e2"
+      }
+    },
+    "owner": "heavykenny"
   }
 }
