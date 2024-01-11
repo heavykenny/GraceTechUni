@@ -1,4 +1,3 @@
-// save user to storage
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const dataStorage = async (key, value) => {
@@ -28,7 +27,6 @@ export const dataRemove = async (key) => {
         return null;
     }
 }
-
 
 // roles
 export const roles = {
