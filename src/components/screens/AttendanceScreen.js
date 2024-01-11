@@ -1,11 +1,21 @@
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, FlatList, Modal, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+    ActivityIndicator,
+    FlatList,
+    Keyboard,
+    Modal,
+    SafeAreaView,
+    Text,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    View
+} from 'react-native';
 import Styles, {cameraStyles} from "../../constants/styles";
 import CustomButton from "../common/CustomButton";
 import InputField from "../common/InputField";
 import CustomHeader from "../common/CustomHeader";
 import FAButton from "../common/FAButton";
-import {Card, Paragraph, Title} from "react-native-paper";
+import {Card, Icon, Paragraph, Title} from "react-native-paper";
 import {Camera} from 'expo-camera';
 import * as Location from 'expo-location';
 import {getUser} from "../../services/firebase/auth";
@@ -15,6 +25,7 @@ import {
     validateAttendanceCode
 } from "../../services/firebase/attendance";
 import {convertTimestamp} from "../../utils/helpers";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
 const AttendanceScreen = ({navigation}) => {
     const [attendanceCode, setAttendanceCode] = useState('');
@@ -209,8 +220,14 @@ const AttendanceScreen = ({navigation}) => {
             transparent={true}
             visible={attendanceModalVisible}
         >
-            <View style={cameraStyles.modalView}>
-                <View style={Styles.checkInSection}>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <KeyboardAwareScrollView style={Styles.modalView}>
+                    <TouchableOpacity style={Styles.closeIcon} onPress={() => setAttendanceModalVisible(false)}>
+                        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
+                            <Paragraph>Close</Paragraph>
+                            <Icon name="close" size={30} source={"close"}/>
+                        </View>
+                    </TouchableOpacity>
                     <Title style={Styles.title}>Check In</Title>
 
                     <InputField
@@ -253,8 +270,8 @@ const AttendanceScreen = ({navigation}) => {
                             Close
                         </CustomButton>
                     </View>
-                </View>
-            </View>
+                </KeyboardAwareScrollView>
+            </TouchableWithoutFeedback>
         </Modal>
 
 
