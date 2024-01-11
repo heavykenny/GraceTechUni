@@ -168,7 +168,7 @@ const Styles = StyleSheet.create({
         flexDirection: 'row', alignItems: 'center',
         backgroundColor: colorScheme.white
     }, userPhoto: {
-        width: 20, height: 20, borderRadius: 20, marginRight: 8,
+        width: 25, height: 25, borderRadius: 20, marginRight: 8,
     }, postUserName: {
         fontWeight: 'bold', marginRight: 4, color: 'grey',
     }, userRole: {
@@ -177,11 +177,11 @@ const Styles = StyleSheet.create({
         borderStyle: 'solid',
         borderWidth: 1,
         borderColor: 'grey',
-        borderRadius: 10,
+        borderRadius: 5,
         fontSize: 8,
-        padding: 4,
+        padding: 2,
     }, content: {
-        padding: 4, marginVertical: 4,
+        padding: 4,
     }, dateContainer: {
         flexDirection: 'row', justifyContent: 'flex-end',
     }, postDate: {
