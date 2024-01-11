@@ -7,7 +7,7 @@ import StackNavigator from "./StackNavigator";
 import {getUser} from "../../services/firebase/auth";
 import AdminCreateCourseScreen from "../screens/AdminCreateCourseScreen";
 import AdminCreateUserScreen from "../screens/AdminCreateUserScreen";
-import Styles from "../../constants/styles";
+import Styles, {colorScheme} from "../../constants/styles";
 import ModulesGradesScreen from "../screens/ModulesGradesScreen";
 import AdminCreateLecturerScreen from "../screens/AdminCreateLecturerScreen";
 import {ActivityIndicator, View} from "react-native";
@@ -17,7 +17,6 @@ const AppNavigator = () => {
     const [index, setIndex] = useState(0);
     const [user, setUser] = useState({});
     const [isLoading, setIsLoading] = useState(true);
-
     const userRoutes = [{
         key: 'home', title: 'Home', focusedIcon: 'home', unfocusedIcon: 'home-outline'
     }, {
@@ -26,15 +25,13 @@ const AppNavigator = () => {
         key: 'profile', title: 'Profile', focusedIcon: 'account', unfocusedIcon: 'account-outline'
     },];
 
-    const adminRoutes = [{
-        key: 'admin_course', title: 'Course', focusedIcon: 'book-plus', unfocusedIcon: 'book-plus-outline'
-    }, {
-        key: 'admin_users', title: 'Students', focusedIcon: 'account-group', unfocusedIcon: 'account-group-outline'
-    }, {
-        key: 'admin_lecturer', title: 'Lecturer', focusedIcon: 'account-tie', unfocusedIcon: 'account-tie-outline'
-    }, {
-        key: 'admin_manage', title: 'Attendance', focusedIcon: 'account-cog', unfocusedIcon: 'account-cog-outline'
-    }, {key: 'admin_profile', title: 'Profile', focusedIcon: 'account', unfocusedIcon: 'account-outline'},];
+    const adminRoutes = [
+        {key: 'admin_course', title: 'Course', focusedIcon: 'book-plus', unfocusedIcon: 'book-plus-outline'},
+        {key: 'admin_users', title: 'Students', focusedIcon: 'account-group', unfocusedIcon: 'account-group-outline'},
+        {key: 'admin_lecturer', title: 'Lecturer', focusedIcon: 'account-tie', unfocusedIcon: 'account-tie-outline'},
+        {key: 'attendance_record', title: 'Records', focusedIcon: 'calendar-check', unfocusedIcon: 'calendar-check-outline'}, {key: 'admin_manage', title: 'Attendance', focusedIcon: 'account-cog', unfocusedIcon: 'account-cog-outline'},
+        {key: 'admin_profile', title: 'Profile', focusedIcon: 'account', unfocusedIcon: 'account-outline'}
+    ];
 
 
     const lecturerRoutes = [{
@@ -44,7 +41,7 @@ const AppNavigator = () => {
         title: 'Attendance',
         focusedIcon: 'account-cog',
         unfocusedIcon: 'account-cog-outline'
-    },{
+    }, {
         key: 'lecturer_modules', title: 'Modules', focusedIcon: 'book', unfocusedIcon: 'book-outline'
     }, {key: 'lecturer_profile', title: 'Profile', focusedIcon: 'account', unfocusedIcon: 'account-outline'}];
 
@@ -54,20 +51,18 @@ const AppNavigator = () => {
         const getUserDetails = async () => {
             try {
                 setIsLoading(true);
-                const user = await getUser();
-                setUser(user);
-                setRoutes(user.role === 'admin' ? adminRoutes : userRoutes);
-                if (user.role === 'admin') {
+                const userDetails = await getUser();
+                setUser(userDetails);
+                if (userDetails.role === 'admin') {
                     setRoutes(adminRoutes);
-                } else if (user.role === 'lecturer') {
+                } else if (userDetails.role === 'lecturer') {
                     setRoutes(lecturerRoutes);
                 } else {
                     setRoutes(userRoutes);
                 }
+                setIsLoading(false);
             } catch (error) {
                 console.error('Error retrieving user data:', error);
-            } finally {
-                setIsLoading(false);
             }
         };
         getUserDetails().then(r => r);
@@ -83,6 +78,7 @@ const AppNavigator = () => {
         admin_course: AdminCreateCourseScreen,
         admin_users: AdminCreateUserScreen,
         admin_lecturer: AdminCreateLecturerScreen,
+        attendance_record: LecturerAttendanceScreen,
         admin_manage: ModulesScreen,
         admin_profile: ProfileScreen,
         lecturer_attendance: LecturerAttendanceScreen,
@@ -98,6 +94,11 @@ const AppNavigator = () => {
         navigationState={{index, routes}}
         onIndexChange={handleIndexChange}
         renderScene={renderScene}
+        barStyle={{
+            backgroundColor: colorScheme.lightestGray,
+        }}
+        activeColor={colorScheme.blue}
+        inactiveColor={colorScheme.black}
     />);
 };
 

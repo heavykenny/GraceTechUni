@@ -1,8 +1,9 @@
 import React from 'react';
 import {Button as PaperButton} from 'react-native-paper';
+import {colorScheme} from "../../constants/styles";
 
 const CustomButton = ({mode, style, ...props}) => {
-    let buttonStyle = {margin: 5};
+    let buttonStyle = {margin: 5, borderRadius: 10, color: colorScheme.white};
     switch (mode) {
         case 'outlined':
             buttonStyle = {...buttonStyle, ...styles.outlined};
@@ -24,24 +25,20 @@ const CustomButton = ({mode, style, ...props}) => {
     // Merging passed-in styles
     buttonStyle = {...buttonStyle, ...style};
 
-    return <PaperButton mode={mode} style={buttonStyle} {...props}  children={props.children}/>;
+    return <PaperButton mode={mode} style={buttonStyle} labelStyle={buttonStyle} {...props} children={props.children}/>;
+    // return <PaperButton mode={mode} labelStyle={buttonStyle} {...props} children={props.children} />;
 };
 
 const styles = {
     text: {
-        // Style for text button
-    },
-    outlined: {
-        // Style for outlined button
-    },
-    contained: {
-        // Style for contained button
-    },
-    elevated: {
-        // Style for elevated button (may need to adjust elevation/shadow)
-    },
-    containedTonal: {
-        // Style for contained-tonal button
+        color: colorScheme.black
+    }, outlined: {
+        borderColor: colorScheme.blue,
+        color: colorScheme.blue
+    }, contained: {
+        backgroundColor: colorScheme.blue
+    }, elevated: {
+    }, containedTonal: {
     }
 };
 

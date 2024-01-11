@@ -1,13 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {FlatList, Modal, SafeAreaView, View} from 'react-native';
-import {Card, Paragraph, Title} from 'react-native-paper';
+import React, { useEffect, useState } from 'react';
+import {FlatList, Modal, SafeAreaView, View, TouchableWithoutFeedback, Keyboard, TouchableOpacity} from 'react-native';
+import {Card, Icon, Paragraph, Title} from 'react-native-paper';
 import InputField from "../common/InputField";
 import Styles from "../../constants/styles";
-import {deleteUser, getAllLecturers, updateUser} from "../../services/firebase/user";
+import { deleteUser, getAllLecturers, updateUser } from "../../services/firebase/user";
 import CustomHeader from "../common/CustomHeader";
 import FAButton from "../common/FAButton";
 import CustomButton from "../common/CustomButton";
-import {createUserWithEmailOnly} from "../../services/firebase/auth";
+import { createUserWithEmailOnly } from "../../services/firebase/auth";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const AdminCreateLecturerScreen = () => {
     const [lecturer, setLecturer] = useState([]);
@@ -23,7 +24,7 @@ const AdminCreateLecturerScreen = () => {
     }, []);
 
     const handleSubmit = () => {
-        const userData = {displayName: name, email, phoneNumber, role};
+        const userData = { displayName: name, email, phoneNumber, role };
         const action = selectedUser ? updateUser(selectedUser.uid, userData) : createUserWithEmailOnly(userData);
         action.then(() => {
             refreshLecturer();
@@ -37,6 +38,7 @@ const AdminCreateLecturerScreen = () => {
     };
 
     const handleEdit = (user) => () => {
+        console.log('Editing user:', user);
         setName(user.displayName);
         setEmail(user.email);
         setPhoneNumber(user.phoneNumber);
@@ -62,7 +64,8 @@ const AdminCreateLecturerScreen = () => {
         setEditModalVisible(false);
     };
 
-    const renderLecturer = ({item}) => (<Card style={Styles.card}>
+    const renderLecturer = ({ item }) => (
+        <Card style={Styles.card}>
             <Card.Content>
                 <Title>{item.displayName}</Title>
                 <Paragraph>Email: {item.email}</Paragraph>
@@ -73,19 +76,23 @@ const AdminCreateLecturerScreen = () => {
                 <CustomButton onPress={handleEdit(item)}>Edit</CustomButton>
                 <CustomButton onPress={handleDelete(item.uid)}>Delete</CustomButton>
             </Card.Actions>
-        </Card>);
+        </Card>
+    );
 
-    const renderEmpty = () => (<View style={Styles.emptyCoursesContainer}>
+    const renderEmpty = () => (
+        <View style={Styles.emptyCoursesContainer}>
             <Title>No Lecturer Found</Title>
-        </View>);
+        </View>
+    );
 
-    return (<SafeAreaView style={Styles.screenContainer}>
-            <CustomHeader title={'Admin Manage Lecturers'}/>
+    return (
+        <SafeAreaView style={Styles.screenContainer}>
+            <CustomHeader title={'Admin Manage Lecturers'} />
             <FlatList
                 data={lecturer}
                 renderItem={renderLecturer}
                 keyExtractor={(item) => item.uid}
-                contentContainerStyle={{padding: 5}}
+                contentContainerStyle={{ padding: 5 }}
                 ListEmptyComponent={renderEmpty}
             />
             <Modal
@@ -94,23 +101,37 @@ const AdminCreateLecturerScreen = () => {
                 visible={editModalVisible}
                 onRequestClose={resetForm}
             >
-                <View style={Styles.modalView}>
-                    <Title style={Styles.title}>{selectedUser ? 'Edit Lecturer' : 'Create New Lecturer'}</Title>
-                    <InputField label="Name" value={name} onChangeText={setName}/>
-                    <InputField label="Email" value={email} onChangeText={setEmail}/>
-                    <InputField label="Phone Number" value={phoneNumber} onChangeText={setPhoneNumber}/>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <KeyboardAwareScrollView style={Styles.modalView}>
+                        <TouchableOpacity onPress={resetForm} style={Styles.closeIcon}>
+                            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
+                                <Paragraph>Close</Paragraph>
+                                <Icon name="close" size={30} source={"close"}/>
+                            </View>
+                        </TouchableOpacity>
+                        <Title style={Styles.title}>
+                            {selectedUser ? 'Edit Lecturer' : 'Create New Lecturer'}
+                        </Title>
+                        <InputField label="Name" value={name} onChangeText={setName} />
+                        <InputField label="Email" value={email} onChangeText={setEmail} />
+                        <InputField label="Phone Number" value={phoneNumber} onChangeText={setPhoneNumber} />
 
-                    <View style={Styles.buttonContainer}>
-                        <CustomButton onPress={resetForm} icon={'close'} mode={'outlined'}>Cancel</CustomButton>
-                        <CustomButton mode={'contained'} onPress={handleSubmit} icon="check">Save
-                            Lecturer</CustomButton>
-                    </View>
-                </View>
+                        <View style={Styles.buttonContainer}>
+                            <CustomButton onPress={resetForm} icon={'close'} mode={'outlined'}>
+                                Cancel
+                            </CustomButton>
+                            <CustomButton mode={'contained'} onPress={handleSubmit} icon="check">
+                                Save Lecturer
+                            </CustomButton>
+                        </View>
+                    </KeyboardAwareScrollView>
+                </TouchableWithoutFeedback>
             </Modal>
-            <View style={{position: 'absolute', bottom: 0, right: 0}}>
-                <FAButton onPress={handleCreateLecturer} icon="pencil"/>
+            <View style={{ position: 'absolute', bottom: 0, right: 0 }}>
+                <FAButton onPress={handleCreateLecturer} icon="pencil" />
             </View>
-        </SafeAreaView>);
+        </SafeAreaView>
+    );
 };
 
 export default AdminCreateLecturerScreen;

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, Modal, SafeAreaView, View} from 'react-native';
-import {Card, Paragraph, Title} from 'react-native-paper';
+import {FlatList, Keyboard, Modal, SafeAreaView, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
+import {Card, Icon, Paragraph, Title} from 'react-native-paper';
 import InputField from "../common/InputField";
 import Styles from "../../constants/styles";
 import {deleteUser, getAllStudents, updateUser} from "../../services/firebase/user";
@@ -8,6 +8,7 @@ import CustomHeader from "../common/CustomHeader";
 import FAButton from "../common/FAButton";
 import CustomButton from "../common/CustomButton";
 import {createUserWithEmailOnly} from "../../services/firebase/auth";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
 const AdminCreateUserScreen = () => {
     const [users, setUsers] = useState([]);
@@ -94,17 +95,26 @@ const AdminCreateUserScreen = () => {
             visible={editModalVisible}
             onRequestClose={resetForm}
         >
-            <View style={Styles.modalView}>
-                <Title style={Styles.title}>{selectedUser ? 'Edit Student' : 'Create New Student'}</Title>
-                <InputField label="Name" value={name} onChangeText={setName}/>
-                <InputField label="Email" value={email} onChangeText={setEmail}/>
-                <InputField label="Phone Number" value={phoneNumber} onChangeText={setPhoneNumber}/>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <KeyboardAwareScrollView style={Styles.modalView}>
+                    <TouchableOpacity onPress={resetForm} style={Styles.closeIcon}>
+                        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
+                            <Paragraph>Close</Paragraph>
+                            <Icon name="close" size={30} source={"close"}/>
+                        </View>
+                    </TouchableOpacity>
 
-                <View style={Styles.buttonContainer}>
-                    <CustomButton onPress={resetForm} icon={'close'} mode={'outlined'}>Cancel</CustomButton>
-                    <CustomButton mode={'contained'} onPress={handleSubmit} icon="check">Save User</CustomButton>
-                </View>
-            </View>
+                    <Title style={Styles.title}>{selectedUser ? 'Edit Student' : 'Create New Student'}</Title>
+                    <InputField label="Name" value={name} onChangeText={setName}/>
+                    <InputField label="Email" value={email} onChangeText={setEmail}/>
+                    <InputField label="Phone Number" value={phoneNumber} onChangeText={setPhoneNumber}/>
+
+                    <View style={Styles.buttonContainer}>
+                        <CustomButton onPress={resetForm} icon={'close'} mode={'outlined'}>Cancel</CustomButton>
+                        <CustomButton mode={'contained'} onPress={handleSubmit} icon="check">Save User</CustomButton>
+                    </View>
+                </KeyboardAwareScrollView>
+            </TouchableWithoutFeedback>
         </Modal>
         <View style={{position: 'absolute', bottom: 0, right: 0}}>
             <FAButton onPress={handleCreateUser} icon="pencil"/>

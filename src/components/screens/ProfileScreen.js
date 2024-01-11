@@ -131,13 +131,14 @@ const ProfileScreen = ({navigation}) => {
 
     return (<SafeAreaView style={Styles.screenContainer}>
         <CustomHeader
-            title="Profile"
+            title="Profile Details"
         />
         <KeyboardAwareScrollView style={Styles.scrollView}>
             <View style={Styles.profileHeader}>
                 <Avatar.Image size={100} source={{uri: originalStudentInfo.photoURL}} style={Styles.avatar}/>
                 <Title style={Styles.name}>{originalStudentInfo.displayName}</Title>
                 <Paragraph style={Styles.studentId}>{originalStudentInfo.studentId}</Paragraph>
+                <Paragraph style={Styles.studentId}>{originalStudentInfo.role}</Paragraph>
             </View>
 
             <Card style={Styles.card}>

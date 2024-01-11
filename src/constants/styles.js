@@ -1,7 +1,20 @@
 import {StyleSheet} from "react-native";
 
 export const colorScheme = {
-    primary: '#007bff', secondary: '#6c757d', background: '#fff', text: '#333'
+    primary: '#007bff',
+    secondary: '#6c757d',
+    background: '#fff',
+    text: '#333',
+    blue: '#3066BE',
+    lightBlue: '#60AFFF',
+    lighterBlue: '#28C2FF',
+    lightestBlue: '#B3E0FF',
+    white: '#fff',
+    black: '#000',
+    gray: '#666',
+    lightGray: '#ddd',
+    lighterGray: '#f4f4f4',
+    lightestGray: '#f9f9f9',
 };
 
 export const typography = {
@@ -13,16 +26,23 @@ export const typography = {
 };
 
 const Styles = StyleSheet.create({
-    container: {
+    closeIcon:{
+        marginBottom: 10,
+    },
+    logoContainer: {
+        alignItems: 'center', justifyContent: 'center', padding: 10, margin: 10
+        // if ios add  marginTop: 100
+    }, logo: {
+        width: "100%", height: 150, resizeMode: "contain",
+    }, container: {
         flex: 1, justifyContent: 'center', padding: 20, margin: 10
     }, title: {
-        fontSize: 20,
-        textAlign: 'center',
-        marginHorizontal: 20,
+        padding: 10,
+        fontSize: 30, textAlign: 'center', marginHorizontal: 20, marginBottom: 10,
     }, buttonContainer: {
         marginTop: 10
     }, screenContainer: {
-        flex: 1,
+        flex: 1, backgroundColor: colorScheme.background, paddingHorizontal: 10,
     }, scrollView: {
         paddingTop: 5, marginHorizontal: 10,
     }, card: {
@@ -71,7 +91,6 @@ const Styles = StyleSheet.create({
     }, appbar: {
         height: 40, // Reduced height
     }, backAction: {
-        // If you need to reduce the size of the back icon, you can use scale
         transform: [{scale: 0.8}],
     }, appbarContent: {
         fontSize: 16, // Reduced font size for the title
@@ -104,23 +123,20 @@ const Styles = StyleSheet.create({
     }, button: {
         marginVertical: 10,
     }, modalView: {
-        marginTop: 50, // Space from the top
-        marginBottom: 0, // Space from the bottom
-        marginLeft: 10, // Space from the left
-        marginRight: 10, // Space from the right
-        backgroundColor: "white", borderRadius: 20, padding: 35, // alignItems: "center",
-        shadowColor: "#000", shadowOffset: {
-            width: 0, height: 2
-        }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5
-    },
-    userListModalView: {
-        marginTop: 10, // Space from the top
-        marginBottom: 10, // Space from the bottom
-        marginLeft: 10, // Space from the left
-        marginRight: 10, // Space from the right
-        backgroundColor: "white",
-        borderRadius: 20,
-        shadowColor: "#000", shadowOffset: {
+        marginTop: 100,
+        marginLeft: 5,
+        marginRight: 5,
+        backgroundColor: colorScheme.lighterGray,
+        borderRadius: 20, padding: 40,
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderColor: colorScheme.blue,
+    }, userListModalView: {
+        marginTop: 10,
+        marginBottom: 10,
+        marginLeft: 10,
+        marginRight: 10,
+        backgroundColor: "white", borderRadius: 20, shadowColor: "#000", shadowOffset: {
             width: 0, height: 2
         }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5
     },
@@ -150,12 +166,20 @@ const Styles = StyleSheet.create({
         padding: 5, borderWidth: 1, borderColor: 'lightgray', borderRadius: 5, marginVertical: 5,
     }, header: {
         flexDirection: 'row', alignItems: 'center',
+        backgroundColor: colorScheme.white
     }, userPhoto: {
         width: 20, height: 20, borderRadius: 20, marginRight: 8,
     }, postUserName: {
         fontWeight: 'bold', marginRight: 4, color: 'grey',
     }, userRole: {
-        marginRight: 4, fontStyle: 'italic', borderStyle: 'solid', borderWidth: 1, borderColor: 'grey', borderRadius: 10, fontSize: 8, padding: 4,
+        marginRight: 4,
+        fontStyle: 'italic',
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderColor: 'grey',
+        borderRadius: 10,
+        fontSize: 8,
+        padding: 4,
     }, content: {
         padding: 4, marginVertical: 4,
     }, dateContainer: {
@@ -166,8 +190,7 @@ const Styles = StyleSheet.create({
         flex: 1, padding: 10,
     }, textInput: {
         height: 150, borderColor: 'gray', borderWidth: 1, marginBottom: 10, padding: 10, textAlignVertical: 'top',
-    },
-    codeAndTimeContainer: {
+    }, codeAndTimeContainer: {
         flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
     }, attendanceCode: {
         fontSize: 16, fontWeight: 'bold',
@@ -217,7 +240,8 @@ export const cameraStyles = StyleSheet.create({
         width: 50,
     }, closeButtonText: {
         color: 'white', fontSize: 40,
-    }, modalView: {
+    },
+    modalView: {
         justifyContent: 'center',
         position: 'absolute',
         bottom: '30%',

@@ -1,6 +1,15 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {FlatList, Modal, SafeAreaView, Text, View} from 'react-native';
-import {Card, Checkbox, List, Paragraph, Title} from 'react-native-paper';
+import {
+    FlatList,
+    Keyboard,
+    Modal,
+    SafeAreaView,
+    Text,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    View
+} from 'react-native';
+import {Card, Checkbox, Icon, List, Paragraph, Title} from 'react-native-paper';
 import InputField from "../common/InputField";
 import CustomButton from "../common/CustomButton";
 import FAButton from "../common/FAButton";
@@ -8,6 +17,7 @@ import Styles from "../../constants/styles";
 import {createNewCourse, deleteCourse, getAllCourses, updateCourse} from "../../services/firebase/course";
 import CustomHeader from "../common/CustomHeader";
 import {attachedCourseToUsers, detachCourseFromUser, getAllStudents} from "../../services/firebase/user";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
 const AdminCreateCourseScreen = ({navigation}) => {
     // State initializations
@@ -191,7 +201,7 @@ const AdminCreateCourseScreen = ({navigation}) => {
             <FlatList
                 data={userList}
                 renderItem={renderUserSelectionItem}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item.uid}
             />
             <View style={Styles.buttonContainer}>
                 <CustomButton
@@ -210,32 +220,40 @@ const AdminCreateCourseScreen = ({navigation}) => {
             visible={editModalVisible}
             onRequestClose={resetForm}
         >
-            <View style={Styles.modalView}>
-                <Title style={Styles.title}>{selectedCourse ? 'Edit Course' : 'Create New Course'}</Title>
-                <InputField label="Course Name" value={courseName} onChangeText={setCourseName}/>
-                <InputField label="Degree Type (e.g., BSc, Masters)" value={degreeType}
-                            onChangeText={setDegreeType}/>
-                <InputField label="Academic Session (e.g., 2023-2024)" value={session}
-                            onChangeText={setSession}/>
-                <InputField label="Duration (e.g., 4 years)" value={duration} onChangeText={setDuration}/>
-                <InputField label="Faculty" value={faculty} onChangeText={setFaculty}/>
-                <InputField label="Department" value={department} onChangeText={setDepartment}/>
-                <InputField label="Total Credits" value={credits} onChangeText={setCredits}
-                            keyboardType="numeric"/>
-                <View style={{flexDirection: 'row', alignItems: 'center', marginVertical: 10}}>
-                    <Checkbox status={isActive ? 'checked' : 'unchecked'}
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <KeyboardAwareScrollView style={Styles.modalView}>
+                    <TouchableOpacity onPress={resetForm} style={Styles.closeIcon}>
+                        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
+                            <Paragraph>Close</Paragraph>
+                            <Icon name="close" size={30} source={"close"}/>
+                        </View>
+                    </TouchableOpacity>
+                    <Title style={Styles.title}>{selectedCourse ? 'Edit Course' : 'Create New Course'}</Title>
+                    <InputField label="Course Name" value={courseName} onChangeText={setCourseName}/>
+                    <InputField label="Degree Type (e.g., BSc, Masters)" value={degreeType}
+                                onChangeText={setDegreeType}/>
+                    <InputField label="Academic Session (e.g., 2023-2024)" value={session}
+                                onChangeText={setSession}/>
+                    <InputField label="Duration (e.g., 4 years)" value={duration} onChangeText={setDuration}/>
+                    <InputField label="Faculty" value={faculty} onChangeText={setFaculty}/>
+                    <InputField label="Department" value={department} onChangeText={setDepartment}/>
+                    <InputField label="Total Credits" value={credits} onChangeText={setCredits}
+                                keyboardType="numeric"/>
+                    <View style={{flexDirection: 'row', alignItems: 'center', marginVertical: 10}}>
+                        <Checkbox status={isActive ? 'checked' : 'unchecked'}
 
-                              onPress={() => setIsActive(!isActive)}/>
-                    <Text>Is Active Course?</Text>
-                </View>
+                                  onPress={() => setIsActive(!isActive)}/>
+                        <Text>Is Active Course?</Text>
+                    </View>
 
-                <View style={Styles.buttonContainer}>
-                    <CustomButton onPress={resetForm} icon={'close'} mode={'outlined'}>Cancel</CustomButton>
-                    <CustomButton mode={'contained'} onPress={handleSubmit} icon="check">
-                        {selectedCourse ? 'Update Course' : 'Create Course'}
-                    </CustomButton>
-                </View>
-            </View>
+                    <View style={Styles.buttonContainer}>
+                        <CustomButton onPress={resetForm} icon={'close'} mode={'outlined'}>Cancel</CustomButton>
+                        <CustomButton mode={'contained'} onPress={handleSubmit} icon="check">
+                            {selectedCourse ? 'Update Course' : 'Create Course'}
+                        </CustomButton>
+                    </View>
+                </KeyboardAwareScrollView>
+            </TouchableWithoutFeedback>
         </Modal>
 
         <View style={{position: 'absolute', bottom: 0, right: 0}}>
