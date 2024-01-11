@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Animated, Dimensions, Image, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Animated, Image, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import MapView, {Callout, Marker} from 'react-native-maps';
 import CustomButton from '../common/CustomButton';
 import {convertTimestamp} from "../../utils/helpers";
@@ -68,17 +68,14 @@ const MapScreen = ({attendanceRecords}) => {
                     const scaleStyle = {
                         transform: [{scale: interpolations[index].scale}],
                     };
-                    const opacityStyle = {
-                        opacity: interpolations[index].opacity,
-                    };
 
                     return (<Marker key={index} coordinate={record.location.coords}>
-                        <Animated.View style={[styles.markerWrap, opacityStyle]}>
+                        {Platform.OS === 'ios' && (<Animated.View style={[styles.markerWrap]}>
                             <Animated.View style={[styles.ring, scaleStyle]}/>
-                            <View style={styles.marker}/>
-                        </Animated.View>
+                            {/*<View style={styles.marker}/>*/}
+                        </Animated.View>)}
                         <Callout>
-                            <Text>{record.user.displayName}</Text>
+                            <Text>Name: {record.user.displayName}</Text>
                             <Text>Attendance Code: {record.attendanceCode}</Text>
                             <Text>Module: {record.module.moduleDetails.title}</Text>
                             <Text>Timestamp: {convertTimestamp(record.time)} ago</Text>
@@ -112,7 +109,7 @@ const MapScreen = ({attendanceRecords}) => {
                     />
                     <View style={styles.textContent}>
                         <Text numberOfLines={1} style={styles.cardTitle}>{record.user.displayName}</Text>
-                        <Text numberOfLines={1} style={styles.cardDescription}>
+                        <Text numberOfLines={2} ellipsizeMode='tail' style={styles.cardDescription}>
                             {record.module.moduleDetails.title}
                         </Text>
                     </View>
@@ -132,13 +129,13 @@ const styles = StyleSheet.create({
     }, scrollView: {
         position: "absolute", bottom: 30, left: 0, right: 0
     }, card: {
-        backgroundColor: "#FFF", padding: 3, shadowColor: "#000", overflow: "hidden"
+        backgroundColor: "#FFF", padding: 3, shadowColor: "#000", overflow: "hidden", marginHorizontal: 2,
     }, cardImage: {
         width: "100%", height: 100
     }, cardTitle: {
         fontSize: 12, marginTop: 5, fontWeight: "bold",
     }, cardDescription: {
-        fontSize: 11
+        fontSize: 11, width: 100
     }, markerWrap: {
         alignItems: "center", justifyContent: "center"
     }, marker: {

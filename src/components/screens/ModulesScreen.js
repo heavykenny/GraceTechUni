@@ -28,18 +28,21 @@ const ModulesScreen = ({navigation}) => {
         return () => clearInterval(interval); // This is the cleanup function to clear the interval
     }, [remainingTime]);
 
-    const renderModule = ({item}) => (<Card style={Styles.card} onPress={() => handleModuleClick(item.id)}>
-        <Card.Content>
-            <Title>{item.title}</Title>
-            <Paragraph>{item.description}</Paragraph>
-        </Card.Content>
-    </Card>);
+    const renderModule = ({item}) => (<SafeAreaView style={Styles.screenContainer}>
+        <Card style={Styles.card} onPress={() => handleModuleClick(item.id)}>
+            <Card.Content>
+                <Title>{item.title}</Title>
+                <Paragraph>{item.description}</Paragraph>
+            </Card.Content>
+        </Card>
+    </SafeAreaView>);
 
-    const handleModuleClick = (moduleId) => {
+    const handleModuleClick = async (moduleId) => {
         const generatedCode = generateAttendanceCode();
         setAttendanceCode(generatedCode.code);
         setExpirationTime(generatedCode.expiration);
-        setCurrentModule(fixedModules.find(module => module.id === moduleId));
+        const currentModule = await fixedModules.find(module => module.id === moduleId);
+        setCurrentModule(currentModule);
         createAttendanceCode(moduleId, generatedCode.code, generatedCode.expiration, currentModule).then(r => r);
         setModalVisible(true);
     };
@@ -49,8 +52,10 @@ const ModulesScreen = ({navigation}) => {
         const code = Math.random().toString(36).substr(2, 6).toUpperCase();
         // Set expiration time to 5 minutes from now
         const expiration = new Date(new Date().getTime() + 5 * 60000);
+        // remainingTime in seconds
+        let remainingTime = (expiration.getTime() - new Date().getTime()) / 1000;
         setExpirationTime(expiration);
-        setRemainingTime(0.5 * 60);
+        setRemainingTime(remainingTime);
         return {code, expiration};
     };
 
@@ -65,11 +70,11 @@ const ModulesScreen = ({navigation}) => {
             title={userModel.role === 'admin' ? 'Admin Modules' : 'Lecturer Modules'}
         />
         <FlatList
+            showsVerticalScrollIndicator={false}
             data={fixedModules}
             renderItem={renderModule}
             keyExtractor={(item) => item.id}
         />
-
         <Modal
             style={Styles.modalContainer}
             visible={modalVisible}
@@ -95,12 +100,11 @@ const ModulesScreen = ({navigation}) => {
 
 export default ModulesScreen;
 
-
 const additionalStyles = StyleSheet.create({
     attendanceCode: {
         fontSize: 40, textAlign: 'center', marginVertical: 10, fontWeight: 'bold', padding: 30,
     }, expiry: {
-        fontSize: 15, textAlign: 'center', fontStyle: 'italic',marginHorizontal: 30,
+        fontSize: 15, textAlign: 'center', fontStyle: 'italic', marginHorizontal: 30,
     }, qrCode: {
         alignSelf: 'center', marginHorizontal: 50, justifyContent: 'center', marginBottom: 20, marginTop: 10,
     },

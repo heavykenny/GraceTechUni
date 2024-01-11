@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import ListScreen from './ListScreen'; // Import your ListScreen component
+import ListScreen from './ListScreen';
 import MapScreen from './MapScreen';
 import {ActivityIndicator, SafeAreaView, View} from "react-native";
 import {PaperProvider} from "react-native-paper";
@@ -8,8 +8,7 @@ import CustomButton from "../common/CustomButton";
 import Styles from "../../constants/styles";
 import CustomHeader from "../common/CustomHeader";
 import {getAttendanceRecords} from "../../services/firebase/attendance";
-
-const Tab = createBottomTabNavigator();
+import {useFocusEffect} from "@react-navigation/native";
 
 const LecturerAttendanceScreen = () => {
     const [showList, setShowList] = useState(true);
@@ -30,6 +29,16 @@ const LecturerAttendanceScreen = () => {
         });
     }, []);
 
+    useFocusEffect(React.useCallback(() => {
+        setIsLoading(true);
+        getAttendanceRecords().then((records) => {
+            setIsLoading(false);
+            setAttendanceRecords(records);
+        }, (error) => {
+            console.log('Error retrieving attendance records:', error);
+        });
+    }, []));
+
     if (isLoading) return (<View style={Styles.container}>
         <ActivityIndicator size="large" color="#0000ff"/>
     </View>);
@@ -38,7 +47,7 @@ const LecturerAttendanceScreen = () => {
         <CustomHeader
             title="Lecturer Attendance"
         />
-        <PaperProvider>
+        <PaperProvider >
             <View style={{flex: 1}}>
                 {showList ? <ListScreen attendanceRecords={attendanceRecords}/> :
                     <MapScreen attendanceRecords={attendanceRecords}/>}

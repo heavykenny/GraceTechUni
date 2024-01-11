@@ -62,13 +62,17 @@ const HomeScreen = ({navigation}) => {
         <ActivityIndicator size="large" color="#0000ff"/>
     </View>);
 
-    return (<SafeAreaView style={[Styles.screenContainer, {backgroundColor: colorScheme.background}]}>
+    return (<SafeAreaView style={[Styles.screenContainer]}>
         <CustomHeader
             title="Home"
         />
         <MessageSnackBar visible={isMessageVisible} onDismiss={() => setIsMessageVisible(false)}
                          message={message} type={messageType}/>
-        <ScrollView style={Styles.scrollView} showsVerticalScrollIndicator={false} persistentScrollbar={false}>
+        <ScrollView
+            showsVerticalScrollIndicator={false}
+            persistentScrollbar={false}
+            style={{paddingHorizontal: 10}}
+        >
             <Card style={Styles.card}>
                 <Card.Content>
                     <Title>Welcome to GraceTech University</Title>
@@ -86,13 +90,13 @@ const HomeScreen = ({navigation}) => {
                         <Paragraph>View your course details</Paragraph>
                     </Card.Content>
                 </Card>)}
-            {userModel.role === 'student' && (<View>
+            {userModel.role === 'student' && (
                 <CourseDetailsScreen
                     visible={isModalVisible}
                     hideModal={() => setIsModalVisible(false)}
                     courseDetails={selectedCourse}
                 />
-            </View>)}
+            )}
             {userModel.role === 'student' && (<Card style={Styles.card} onPress={() => navigation.navigate('Modules')}>
                 <Card.Content>
                     <MaterialCommunityIcons name="book" size={24} style={Styles.icon}/>
