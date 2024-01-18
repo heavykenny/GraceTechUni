@@ -11,14 +11,10 @@ export const createNewCourse = async (course) => {
 
         // Define additional metadata to add/merge with the document
         const additionalData = {
-            id: courseRef.id, // Set the document's ID
-            courseCode: courseCode, // Set the course code
-            createdAt: new Date(), // Set creation date
-            updatedAt: new Date(), // Set the initial update date
+            id: courseRef.id, courseCode: courseCode, createdAt: new Date(), updatedAt: new Date(),
         };
 
         // Update the newly created document with additional data
-        // Here, setDoc is used with merge:true to update the document rather than overwrite it
         await setDoc(courseRef, additionalData, {merge: true});
 
         // Create the complete course object to return

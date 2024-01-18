@@ -67,15 +67,15 @@ const Styles = StyleSheet.create({
         flexDirection: 'row', alignItems: 'center', marginTop: 20, padding: 20, backgroundColor: '#f4f4f4', // or any color that fits your theme
         borderBottomWidth: 1, borderBottomColor: '#dedede'
     }, userIcon: {
-        color: '#6200ee', // Adjust the color to match your theme
+        color: '#6200ee',
     }, userInfo: {
         flex: 1, marginLeft: 15
     }, userName: {
-        fontSize: 18, fontWeight: 'bold', color: '#333' // Adjust the color to match your theme
+        fontSize: 18, fontWeight: 'bold', color: '#333'
     }, userId: {
-        fontSize: 14, color: '#666' // Adjust the color to match your theme
+        fontSize: 14, color: '#666'
     }, settingsIcon: {
-        color: '#6200ee', // Adjust the color to match your theme
+        color: '#6200ee',
     }, drawerSection: {
         fontWeight: 'bold',
     }, modalContainer: {
@@ -89,11 +89,11 @@ const Styles = StyleSheet.create({
     }, paragraph: {
         fontSize: 14, marginBottom: 5,
     }, appbar: {
-        height: 40, // Reduced height
+        height: 40,
     }, backAction: {
         transform: [{scale: 0.8}],
     }, appbarContent: {
-        fontSize: 16, // Reduced font size for the title
+        fontSize: 16,
     },
 
     courseTabsContainer: {
@@ -115,7 +115,7 @@ const Styles = StyleSheet.create({
     profileHeader: {
         alignItems: 'center', marginVertical: 20,
     }, avatar: {
-        backgroundColor: '#6200ee', // Adjust the color as needed
+        backgroundColor: '#6200ee',
     }, name: {
         marginTop: 10, fontSize: 20, fontWeight: 'bold',
     }, studentId: {
@@ -139,20 +139,17 @@ const Styles = StyleSheet.create({
         backgroundColor: "white", borderRadius: 20, shadowColor: "#000", shadowOffset: {
             width: 0, height: 2
         }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5
-    },
-
-    // Add these to your Styles.js or equivalent stylesheet
-    cardRow: {
+    }, cardRow: {
         flexDirection: 'row', alignItems: 'center', marginBottom: 10,
     }, cardIcon: {
         marginRight: 10,
     }, cardText: {
-        flex: 1, // Add additional text styling if needed
+        flex: 1,
     }, avatarContainer: {
         position: 'relative',
     }, editIcon: {
-        position: 'absolute', right: 0, bottom: 0, backgroundColor: 'white', // Choose a background color that matches your theme
-        borderRadius: 12, // Half of icon size to make it circular
+        position: 'absolute', right: 0, bottom: 0, backgroundColor: 'white',
+        borderRadius: 12,
         padding: 2,
     }, userList: {
         padding: 10, backgroundColor: 'white', borderRadius: 5,
@@ -160,9 +157,7 @@ const Styles = StyleSheet.create({
         flex: 1, justifyContent: 'center', alignItems: 'center',
     }, emptyCoursesText: {
         fontSize: 18, fontWeight: 'bold', textAlign: 'center', marginTop: 50,
-    },
-
-    postContainer: {
+    }, postContainer: {
         padding: 5, borderWidth: 1, borderColor: 'lightgray', borderRadius: 5, marginVertical: 5,
     }, header: {
         flexDirection: 'row', alignItems: 'center',
@@ -211,7 +206,6 @@ export const cameraStyles = StyleSheet.create({
         paddingTop: 16,
         paddingHorizontal: 16,
     }, instructionContainer: {
-        // have a semi-transparent black background with border radius
         borderRadius: 20,
         padding: 10,
         borderStyle: 'solid',
