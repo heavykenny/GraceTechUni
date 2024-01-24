@@ -1,11 +1,9 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {FlatList, SafeAreaView, StyleSheet, View} from 'react-native';
 import {List} from 'react-native-paper';
 import Styles from "../../constants/styles";
 import CustomHeader from "../common/CustomHeader";
 import {fixedModules} from "../../services/firebase/module";
-import {getUser} from "../../services/firebase/auth";
-import {getAttendanceByUserId} from "../../services/firebase/attendance";
 
 const ModulesGradesScreen = ({navigation}) => {
     const modules = fixedModules.slice(0, 5);
