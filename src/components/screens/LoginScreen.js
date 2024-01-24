@@ -50,13 +50,12 @@ const LoginScreen = ({navigation}) => {
     useEffect(() => {
         isUserLoggedIn().then((user) => {
             if (user) {
-                console.log('User is logged in:', user);
                 login();
             } else {
                 setIsLoading(false);
             }
         }, (error) => {
-            console.log('Error checking if user is logged in:', error);
+            console.error('Error checking if user is logged in:', error);
         });
         setIsLoading(false);
     }, []);

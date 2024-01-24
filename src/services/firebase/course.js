@@ -83,7 +83,6 @@ export const deleteCourse = async (courseId) => {
 
 export const attachUsersToCourse = async (courseId, users) => {
     try {
-        console.log(courseId, users);
         const courseRef = doc(getFirestoreDB, 'CourseMD', courseId);
         await setDoc(courseRef, {users: users}, {merge: true});
         return courseRef.id;

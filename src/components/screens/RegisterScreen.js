@@ -54,7 +54,7 @@ const RegisterScreen = ({navigation}) => {
             setMessage('Password must be at least 6 characters');
             setMessageType('error');
             setIsMessageVisible(true);
-            console.log('Password must be at least 6 characters');
+            console.error('Password must be at least 6 characters');
             return;
         }
 

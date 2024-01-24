@@ -32,7 +32,7 @@ const ProfileScreen = ({navigation}) => {
         dataRemove('userObject').then(() => {
             logout();
         }, (error) => {
-            console.log('Error logging out user:', error);
+            console.error('Error logging out user:', error);
         });
     };
 
@@ -47,7 +47,7 @@ const ProfileScreen = ({navigation}) => {
                     setIsLoading(false);
                 }
             } catch (error) {
-                console.log('Error retrieving user data:', error);
+                console.error('Error retrieving user data:', error);
             }
         };
         fetchUserData().then(r => r);
