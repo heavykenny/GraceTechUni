@@ -189,7 +189,6 @@ const AttendanceScreen = ({navigation}) => {
         return <Text>No access to camera or location</Text>;
     }
 
-
     if (isLoading) {
         return (<View style={Styles.container}>
             <ActivityIndicator size="large" color="#0000ff"/>

@@ -3,7 +3,7 @@ import {ActivityIndicator, SafeAreaView, ScrollView, View} from 'react-native';
 import {Card, Paragraph, Title} from 'react-native-paper';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 import Styles, {colorScheme} from "../../constants/styles";
-import CourseDetailsScreen from "./CourseDetailsScreen";
+import CourseDetailsModal from "./modals/CourseDetailsModal";
 import CustomHeader from "../common/CustomHeader";
 import {getUser} from "../../services/firebase/auth";
 import UserModel from "../../models/UserModel";
@@ -91,7 +91,7 @@ const HomeScreen = ({navigation}) => {
                     </Card.Content>
                 </Card>)}
             {userModel.role === 'student' && (
-                <CourseDetailsScreen
+                <CourseDetailsModal
                     visible={isModalVisible}
                     hideModal={() => setIsModalVisible(false)}
                     courseDetails={selectedCourse}

@@ -4,6 +4,7 @@ import {colorScheme} from "../../constants/styles";
 
 const CustomButton = ({mode, style, ...props}) => {
     let buttonStyle = {margin: 5, borderRadius: 10, color: colorScheme.white};
+    // Setting button style based on mode
     switch (mode) {
         case 'outlined':
             buttonStyle = {...buttonStyle, ...styles.outlined};
@@ -26,23 +27,16 @@ const CustomButton = ({mode, style, ...props}) => {
     buttonStyle = {...buttonStyle, ...style};
 
     return <PaperButton mode={mode} style={buttonStyle} labelStyle={buttonStyle} {...props} children={props.children}/>;
-    // return <PaperButton mode={mode} labelStyle={buttonStyle} {...props} children={props.children} />;
 };
 
 const styles = {
     text: {
         color: colorScheme.black
     }, outlined: {
-        borderColor: colorScheme.blue,
-        color: colorScheme.blue
+        borderColor: colorScheme.blue, color: colorScheme.blue
     }, contained: {
         backgroundColor: colorScheme.blue
-    }, elevated: {
-    }, containedTonal: {
-    }
+    }, elevated: {}, containedTonal: {}
 };
 
 export default CustomButton;
-
-// Usage:
-// <Button icon="camera" mode="contained" style={{ backgroundColor: 'blue', borderRadius: 10 }} onPress={handleLogin}>Login</Button>

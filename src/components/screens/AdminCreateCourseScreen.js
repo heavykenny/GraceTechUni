@@ -33,10 +33,9 @@ const AdminCreateCourseScreen = ({navigation}) => {
     const [department, setDepartment] = useState('');
     const [credits, setCredits] = useState('');
     const [isActive, setIsActive] = useState(true);
-
     const [userList, setUserList] = useState([]);
     const [userSelectionModalVisible, setUserSelectionModalVisible] = useState(false);
-    const [attachedUsers, setAttachedUsers] = useState([]); // Consider how you're storing attached user data
+    const [attachedUsers, setAttachedUsers] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -134,7 +133,6 @@ const AdminCreateCourseScreen = ({navigation}) => {
     const filterCourse = (courseUid) => {
         return courses.filter((course) => course.id === courseUid);
     }
-
 
     const handleCreateCourse = () => {
         resetForm();

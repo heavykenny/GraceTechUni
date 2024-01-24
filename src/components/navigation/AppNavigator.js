@@ -25,14 +25,32 @@ const AppNavigator = () => {
         key: 'profile', title: 'Profile', focusedIcon: 'account', unfocusedIcon: 'account-outline'
     },];
 
-    const adminRoutes = [
-        {key: 'admin_course', title: 'Course', focusedIcon: 'book-plus', unfocusedIcon: 'book-plus-outline'},
-        {key: 'admin_users', title: 'Students', focusedIcon: 'account-group', unfocusedIcon: 'account-group-outline'},
-        {key: 'admin_lecturer', title: 'Lecturer', focusedIcon: 'account-tie', unfocusedIcon: 'account-tie-outline'},
-        {key: 'attendance_record', title: 'Records', focusedIcon: 'calendar-check', unfocusedIcon: 'calendar-check-outline'}, {key: 'admin_manage', title: 'Attendance', focusedIcon: 'account-cog', unfocusedIcon: 'account-cog-outline'},
-        {key: 'admin_profile', title: 'Profile', focusedIcon: 'account', unfocusedIcon: 'account-outline'}
-    ];
-
+    const adminRoutes = [{
+        key: 'admin_course',
+        title: 'Course',
+        focusedIcon: 'book-plus',
+        unfocusedIcon: 'book-plus-outline'
+    }, {
+        key: 'admin_users',
+        title: 'Students',
+        focusedIcon: 'account-group',
+        unfocusedIcon: 'account-group-outline'
+    }, {
+        key: 'admin_lecturer',
+        title: 'Lecturer',
+        focusedIcon: 'account-tie',
+        unfocusedIcon: 'account-tie-outline'
+    }, {
+        key: 'attendance_record',
+        title: 'Records',
+        focusedIcon: 'calendar-check',
+        unfocusedIcon: 'calendar-check-outline'
+    }, {
+        key: 'admin_manage',
+        title: 'Attendance',
+        focusedIcon: 'account-cog',
+        unfocusedIcon: 'account-cog-outline'
+    }, {key: 'admin_profile', title: 'Profile', focusedIcon: 'account', unfocusedIcon: 'account-outline'}];
 
     const lecturerRoutes = [{
         key: 'home', title: 'Home', focusedIcon: 'home', unfocusedIcon: 'home-outline'

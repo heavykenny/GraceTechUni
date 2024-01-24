@@ -30,12 +30,12 @@ const GlobalTimelineScreen = ({navigation}) => {
         }
     };
 
-    // Call fetchData when the screen comes into focus
+    // This is to refresh the data when the screen is focused
     useFocusEffect(React.useCallback(() => {
         fetchData().then(r => r);
-        // Optional: Return a function that specifies any cleanup actions
     }, []));
 
+    // This is to fetch the data from the database
     useEffect(() => {
         fetchData().then(r => r);
     }, []);

@@ -17,11 +17,12 @@ const CourseTimelineScreen = ({navigation, route}) => {
         fetchData().then(r => r);
     }, [courseId]);
 
+    // This is to refresh the data when the screen is focused
     useFocusEffect(React.useCallback(() => {
         fetchData().then(r => r);
     }, [courseId]));
 
-    // Define fetching data logic
+    // This is to fetch the data from the database
     const fetchData = async () => {
         try {
             const [users, timelineData] = await Promise.all([getAllUsers(), getCourseTimelineData(courseId),]);
@@ -32,18 +33,20 @@ const CourseTimelineScreen = ({navigation, route}) => {
         }
     };
 
-    // Define how to find user's display name from UID
+    // This is to filter the user data
     const filterUser = (userUid) => {
         return allUsers.find((user) => user.uid === userUid) || {};
     };
 
-    // Render functions for empty posts and post cards
+    // This is to render the empty posts
     const renderEmptyPosts = () => (<View style={Styles.emptyCoursesContainer}>
         <Text style={Styles.emptyCoursesText}>There are no posts available for this course.</Text>
     </View>);
 
+    // This is to render the posts
     const renderPost = ({item}) => (<PostComponent item={item} user={filterUser(item.userUid)}/>);
 
+    // This is to render the screen
     return (<SafeAreaView style={Styles.screenContainer}>
         <View style={Styles.scrollView}>
             <Appbar.Header style={Styles.appbar} statusBarHeight={0} mode={'small'}>

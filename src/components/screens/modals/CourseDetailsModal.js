@@ -1,9 +1,9 @@
 import React from 'react';
 import {Card, Modal, Paragraph, Portal} from 'react-native-paper';
-import Styles from "../../constants/styles";
-import CustomButton from "../common/CustomButton";
+import Styles from "../../../constants/styles";
+import CustomButton from "../../common/CustomButton";
 
-const CourseDetailsScreen = ({visible, hideModal, courseDetails}) => {
+const CourseDetailsModal = ({visible, hideModal, courseDetails}) => {
     return (
         <Portal>
             <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={Styles.modalContainer}>
@@ -32,4 +32,4 @@ const CourseDetailsScreen = ({visible, hideModal, courseDetails}) => {
         </Portal>
     );
 };
-export default CourseDetailsScreen;
+export default CourseDetailsModal;

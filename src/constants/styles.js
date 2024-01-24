@@ -17,19 +17,10 @@ export const colorScheme = {
     lightestGray: '#f9f9f9',
 };
 
-export const typography = {
-    body1: {
-        fontSize: 16, fontWeight: '400'
-    }, body2: {
-        fontSize: 14, fontWeight: '400', color: '#666'
-    }
-};
-
 const Styles = StyleSheet.create({
-    closeIcon:{
+    closeIcon: {
         marginBottom: 10,
-    },
-    logoContainer: {
+    }, logoContainer: {
         alignItems: 'center', justifyContent: 'center', padding: 10, margin: 10
         // if ios add  marginTop: 100
     }, logo: {
@@ -37,8 +28,7 @@ const Styles = StyleSheet.create({
     }, container: {
         flex: 1, justifyContent: 'center', padding: 20, margin: 10
     }, title: {
-        padding: 10,
-        fontSize: 30, textAlign: 'center', marginHorizontal: 20, marginBottom: 10,
+        padding: 10, fontSize: 30, textAlign: 'center', marginHorizontal: 20, marginBottom: 10,
     }, buttonContainer: {
         marginTop: 10
     }, screenContainer: {
@@ -127,7 +117,8 @@ const Styles = StyleSheet.create({
         marginLeft: 5,
         marginRight: 5,
         backgroundColor: colorScheme.lighterGray,
-        borderRadius: 20, padding: 40,
+        borderRadius: 20,
+        padding: 40,
         borderStyle: 'solid',
         borderWidth: 1,
         borderColor: colorScheme.blue,
@@ -136,9 +127,15 @@ const Styles = StyleSheet.create({
         marginBottom: 10,
         marginLeft: 10,
         marginRight: 10,
-        backgroundColor: "white", borderRadius: 20, shadowColor: "#000", shadowOffset: {
+        backgroundColor: "white",
+        borderRadius: 20,
+        shadowColor: "#000",
+        shadowOffset: {
             width: 0, height: 2
-        }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
     }, cardRow: {
         flexDirection: 'row', alignItems: 'center', marginBottom: 10,
     }, cardIcon: {
@@ -148,9 +145,7 @@ const Styles = StyleSheet.create({
     }, avatarContainer: {
         position: 'relative',
     }, editIcon: {
-        position: 'absolute', right: 0, bottom: 0, backgroundColor: 'white',
-        borderRadius: 12,
-        padding: 2,
+        position: 'absolute', right: 0, bottom: 0, backgroundColor: 'white', borderRadius: 12, padding: 2,
     }, userList: {
         padding: 10, backgroundColor: 'white', borderRadius: 5,
     }, emptyCoursesContainer: {
@@ -160,8 +155,7 @@ const Styles = StyleSheet.create({
     }, postContainer: {
         padding: 5, borderWidth: 1, borderColor: 'lightgray', borderRadius: 5, marginVertical: 5,
     }, header: {
-        flexDirection: 'row', alignItems: 'center',
-        backgroundColor: colorScheme.white
+        flexDirection: 'row', alignItems: 'center', backgroundColor: colorScheme.white
     }, userPhoto: {
         width: 25, height: 25, borderRadius: 20, marginRight: 8,
     }, postUserName: {
@@ -234,8 +228,7 @@ export const cameraStyles = StyleSheet.create({
         width: 50,
     }, closeButtonText: {
         color: 'white', fontSize: 40,
-    },
-    modalView: {
+    }, modalView: {
         justifyContent: 'center',
         position: 'absolute',
         bottom: '30%',
