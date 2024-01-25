@@ -3,7 +3,6 @@ import {addDoc, collection, doc, getDocs, query, setDoc, where} from 'firebase/f
 
 
 // isCourseTimeline is true if the post is created in a course timeline
-// sort by createdAt
 export const getGlobalTimelineData = async () => {
     try {
         const q = query(collection(getFirestoreDB, "PostMD"), where("isCourseTimeline", "==", false));

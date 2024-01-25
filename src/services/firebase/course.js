@@ -32,6 +32,7 @@ export const generateCourseId = (courseTitle) => {
     const courseCode = courseTitle.substring(0, 5).replace(/\s/g, '').toUpperCase();
     return `${courseCode}-${Math.floor(1000 + Math.random() * 9000)}`;
 }
+
 export const updateCourse = async (course) => {
     try {
         const courseRef = doc(getFirestoreDB, 'CourseMD', course.id);
@@ -75,16 +76,6 @@ export const deleteCourse = async (courseId) => {
     try {
         const courseRef = doc(getFirestoreDB, 'CourseMD', courseId);
         await setDoc(courseRef, {deletedAt: new Date()}, {merge: true});
-        return courseRef.id;
-    } catch (error) {
-        throw error;
-    }
-}
-
-export const attachUsersToCourse = async (courseId, users) => {
-    try {
-        const courseRef = doc(getFirestoreDB, 'CourseMD', courseId);
-        await setDoc(courseRef, {users: users}, {merge: true});
         return courseRef.id;
     } catch (error) {
         throw error;

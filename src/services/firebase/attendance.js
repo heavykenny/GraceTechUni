@@ -96,4 +96,3 @@ export const getAttendanceRecords = async () => {
         throw error;
     }
 }
-

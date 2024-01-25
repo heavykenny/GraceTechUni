@@ -1,17 +1,5 @@
 import {getFirestoreDB} from "../../constants/firebase";
-import {addDoc, collection, doc, getDocs, query, setDoc, where} from 'firebase/firestore';
-
-export const createUser = async (user) => {
-    try {
-        const additionalData = {
-            ...user, courseUid: null, createdAt: new Date(), updatedAt: new Date(),
-        };
-        const userRef = await addDoc(collection(getFirestoreDB, 'UserMD'), additionalData);
-        return userRef.id;
-    } catch (error) {
-        throw error;
-    }
-}
+import {collection, doc, getDocs, query, setDoc, where} from 'firebase/firestore';
 
 export const updateUser = async (id, user) => {
     try {
@@ -22,20 +10,6 @@ export const updateUser = async (id, user) => {
         throw error;
     }
 
-}
-
-export const getUserDetails = async (userId) => {
-    try {
-        const q = query(collection(getFirestoreDB, "UserMD"), where("id", "==", userId));
-        const querySnapshot = await getDocs(q);
-        const user = [];
-        querySnapshot.forEach((doc) => {
-            user.push(doc.data());
-        });
-        return user[0];
-    } catch (error) {
-        throw error;
-    }
 }
 
 export const getAllUsers = async () => {

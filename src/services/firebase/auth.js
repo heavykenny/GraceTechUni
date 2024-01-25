@@ -40,7 +40,6 @@ export const loginWithEmail = async (email, password) => {
     }
 };
 
-
 // Reset password
 export const resetPassword = async (email) => {
     try {
@@ -110,7 +109,6 @@ export const uploadProfileImage = async (imageUri, uid) => {
         throw error;
     }
 };
-
 
 const getUserDetailsByUID = async (uid) => {
     try {
