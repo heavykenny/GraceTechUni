@@ -72,6 +72,7 @@ const RegisterScreen = ({navigation}) => {
         }, (error) => {
             setMessageType('error');
             setIsMessageVisible(true);
+            // Handle Errors from Firebase
             if (error.code === 'auth/email-already-in-use') {
                 setMessage('Email already in use');
                 return;

@@ -72,7 +72,6 @@ const MapScreen = ({attendanceRecords}) => {
                     return (<Marker key={index} coordinate={record.location.coords}>
                         {Platform.OS === 'ios' && (<Animated.View style={[styles.markerWrap]}>
                             <Animated.View style={[styles.ring, scaleStyle]}/>
-                            {/*<View style={styles.marker}/>*/}
                         </Animated.View>)}
                         <Callout>
                             <Text>Name: {record.user.displayName}</Text>

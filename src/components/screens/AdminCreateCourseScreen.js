@@ -38,6 +38,7 @@ const AdminCreateCourseScreen = ({navigation}) => {
     const [attachedUsers, setAttachedUsers] = useState([]);
 
     useEffect(() => {
+        // Fetch courses and users
         const fetchData = async () => {
             try {
                 const coursesData = await getAllCourses();
@@ -51,12 +52,14 @@ const AdminCreateCourseScreen = ({navigation}) => {
         fetchData().then(r => r);
     }, []);
 
+    // Render empty courses
     const renderEmptyCourses = () => (<View style={Styles.emptyCoursesContainer}>
         <Text style={Styles.emptyCoursesText}>There are no courses available. Please create a new one.</Text>
-        <CustomButton style={{marginTop: 30}} mode={'outlined'} onPress={handleCreateCourse}>Create
+        <CustomButton mode={'outlined'} onPress={handleCreateCourse}>Create
             Course</CustomButton>
     </View>);
 
+    // Handle attach/detach users
     const handleAttachUsers = useCallback((user) => {
         setAttachedUsers((currentAttachedUsers) => {
             if (currentAttachedUsers.includes(user.uid)) {
@@ -95,6 +98,7 @@ const AdminCreateCourseScreen = ({navigation}) => {
         setIsActive(course.isActive);
     };
 
+    // Handle form submission for creating/updating course
     const handleSubmit = () => {
         const courseData = {
             degree: degreeType,
@@ -117,6 +121,7 @@ const AdminCreateCourseScreen = ({navigation}) => {
         });
     };
 
+    // Reset form
     const resetForm = () => {
         setCourseName('');
         setDegreeType('');
@@ -130,17 +135,21 @@ const AdminCreateCourseScreen = ({navigation}) => {
         setEditModalVisible(false);
     };
 
+    // Filter course by id
     const filterCourse = (courseUid) => {
         return courses.filter((course) => course.id === courseUid);
     }
 
+    // Handle create course
     const handleCreateCourse = () => {
         resetForm();
         setEditModalVisible(true);
     };
 
+    // Handle edit course
     const handleEdit = (course) => () => openEditModal(course);
 
+    // Handle delete course
     const handleDelete = (id) => () => {
         deleteCourse(id).then(() => {
             getAllCourses().then(setCourses);

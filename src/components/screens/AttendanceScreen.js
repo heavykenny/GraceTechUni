@@ -234,7 +234,8 @@ const AttendanceScreen = ({navigation}) => {
                         placeholder={'Enter Attendance Code'}
                         value={attendanceCode}
                         onChangeText={setAttendanceCode}
-                        keyboardType="numeric"
+                        keyboardType="alphanumeric"
+                        autoCapitalize="characters"
                         maxLength={6}
                     />
 

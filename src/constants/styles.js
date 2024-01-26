@@ -151,7 +151,7 @@ const Styles = StyleSheet.create({
     }, emptyCoursesContainer: {
         flex: 1, justifyContent: 'center', alignItems: 'center',
     }, emptyCoursesText: {
-        fontSize: 18, fontWeight: 'bold', textAlign: 'center', marginTop: 50,
+        fontSize: 18, fontWeight: 'bold', textAlign: 'center', margin: 50,
     }, postContainer: {
         padding: 5, borderWidth: 1, borderColor: 'lightgray', borderRadius: 5, marginVertical: 5,
     }, header: {
