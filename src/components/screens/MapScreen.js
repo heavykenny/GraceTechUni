@@ -10,6 +10,7 @@ const MapScreen = ({attendanceRecords}) => {
     const animation = useRef(new Animated.Value(0)).current;
     let mapRef = useRef(null);
 
+    // Reference: https://blog.logrocket.com/react-native-maps-introduction/
     useEffect(() => {
         if (attendanceRecords.length > 0) {
             const latitudes = attendanceRecords.map(record => record.location.coords.latitude);
